@@ -15,8 +15,8 @@ R3,1,15k,0603,,C22809,Divider bottom. 5 V x 15/(10+15) = 3.0 V
 R4 R5,2,5.1k,0603,,C23186,USB-C CC pull-downs
 R7 R9,2,1k,0603,,C21190,LED series resistors (green PWR, blue COOL)
 R8,1,6.8k,0603,UNI-ROYAL 0603WAF6801T5E,C23212,HEAT LED series resistor (red LED runs ~0.2 mA to match the others)
-C1,1,1uF,0603,Samsung CL10A105KA8NNNC,C5673,EN reset delay (with R1) (C15849 was out of stock at LCSC on 2026-11-21)
+C1,1,1uF,0603,Samsung CL10A105KB8NNNC,C15849,EN reset delay (with R1). JLCPCB basic part
 C2 C3,2,10uF,0603,,C19702,LDO input / output
 C4,1,22uF,0805,,C45783,Module bulk decoupling (close to U1 pin 3)
-C5 C6,2,100nF,0603,Samsung CL10B104KB8NNNC,C1591,Module and buffer decoupling (C14663 was out of stock at LCSC on 2026-11-21)
+C5 C6,2,100nF,0603,YAGEO CC0603KRX7R9BB104,C14663,Module and buffer decoupling. JLCPCB basic part
 H1 H2 H3,3,M2.5 mounting hole,2.7 mm,,,No part to buy

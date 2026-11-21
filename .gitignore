@@ -1,0 +1,35 @@
+# --- KiCad -----------------------------------------------------------
+# Per-user editor state (window layout, last-used layers); not part of the design
+*.kicad_prl
+# Automatic backups and autosaves
+*-backups/
+_autosave-*
+*.kicad_sch-bak
+*.kicad_pcb-bak
+*.bak
+*.bck
+*.kicad_sch.lck
+*.kicad_pcb.lck
+*.kicad_pro.lck
+~*.lck
+# Footprint library cache KiCad rebuilds on its own
+fp-info-cache
+# Netlists and intermediate exports
+*.net
+*.d356
+*.rpt
+*.erc
+*.drc
+# Fabrication outputs are regenerated from the sources; attach them to a
+# release/tag instead of committing them
+gerbers/
+production/
+*.zip
+
+# --- tooling ----------------------------------------------------------
+__pycache__/
+*.pyc
+.DS_Store
+
+# Editor local-history folder (its own git repo)
+.history/

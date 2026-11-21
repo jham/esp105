@@ -1,0 +1,22 @@
+Reference,Qty,Value,Package,Manufacturer part,LCSC,Notes
+U1,1,ESP32-C6-MINI-1-N4,module,Espressif ESP32-C6-MINI-1-N4,C5736265,Wi-Fi 6 + 802.15.4 (Thread). Antenna end must hang over the board edge / keepout.
+U2,1,AP2112K-3.3,SOT-23-5,Diodes Inc AP2112K-3.3TRG1,C51118,3.3 V LDO 600 mA
+U3,1,74AHCT1G125,SOT-23-5,TI SN74AHCT1G125DBVR,C7484,5 V buffer with TTL input: 3.3 V in / 5 V out. Must be AHCT (not AHC/LVC).
+CN105,1,CN105 header,JST PA 5-pin side entry,JST S05B-PASK-2(LF)(SN),C489718,2.0 mm pitch right-angle header; cable exits parallel to the board. Mates with PAP-05V-S plug on the CN105 cable. Footprint in cn105.pretty.
+USB-C1,1,USB-C receptacle,HRO TYPE-C-31-M-12,HRO TYPE-C-31-M-12,C165948,16-pin USB 2.0 receptacle
+RESET1 BOOT1,2,tactile switch,5.1x5.1 mm SMD,XKB TS-1187A-B-A-B,C318884,RESET and BOOT
+D1 D2,2,1N5819WS,SOD-323,1N5819WS,C191023,Schottky OR-ing diodes between USB VBUS / CN105 5 V and the +5V rail
+PWR1,1,PWR LED (green),0603,Hubei KENTO KT-0603G,C12624,Green power/status LED on IO23 (net LED_PWR)
+HEAT1,1,HEAT LED (red),0603,Hubei KENTO KT-0603R,C2286,Red heating indicator on IO22 (net LED_HEAT)
+COOL1,1,COOL LED (blue),0603,Hubei KENTO KT-0603B,C2288,Blue cooling indicator on IO21 / module pin 27 (net LED_COOL)
+R1 R6,2,10k,0603,,C25804,EN pull-up / TX idle pull-up
+R2,1,10k,0603,,C25804,Divider top (heat pump TX 5 V -> ESP RX)
+R3,1,15k,0603,,C22809,Divider bottom. 5 V x 15/(10+15) = 3.0 V
+R4 R5,2,5.1k,0603,,C23186,USB-C CC pull-downs
+R7 R9,2,1k,0603,,C21190,LED series resistors (green PWR, blue COOL)
+R8,1,6.8k,0603,UNI-ROYAL 0603WAF6801T5E,C23212,HEAT LED series resistor (red LED runs ~0.2 mA to match the others)
+C1,1,1uF,0603,Samsung CL10A105KA8NNNC,C5673,EN reset delay (with R1) (C15849 was out of stock at LCSC on 2026-11-21)
+C2 C3,2,10uF,0603,,C19702,LDO input / output
+C4,1,22uF,0805,,C45783,Module bulk decoupling (close to U1 pin 3)
+C5 C6,2,100nF,0603,Samsung CL10B104KB8NNNC,C1591,Module and buffer decoupling (C14663 was out of stock at LCSC on 2026-11-21)
+H1 H2 H3,3,M2.5 mounting hole,2.7 mm,,,No part to buy

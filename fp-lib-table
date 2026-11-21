@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "cn105") (type "KiCad") (uri "${KIPRJMOD}/cn105.pretty") (options "") (descr "Project footprints (JST PA header)"))
+)

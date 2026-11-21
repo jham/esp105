@@ -6907,7 +6907,7 @@
 				)
 			)
 		)
-		(property "Footprint" "LED_SMD:LED_0603_1608Metric"
+		(property "Footprint" "LED_SMD:LED_0805_2012Metric"
 			(at 273.05 134.62 0)
 			(hide yes)
 			(show_name no)
@@ -6951,7 +6951,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C12624"
+		(property "LCSC" "C2297"
 			(at 273.05 134.62 0)
 			(hide yes)
 			(show_name no)
@@ -6964,6 +6964,15 @@
 		)
 		(pin "1"
 			(uuid "41efe163-0548-4f3b-9cb8-822e9553d0be")
+		)
+		(property "MPN" "KT-0805G"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
 		)
 		(pin "2"
 			(uuid "8e3dc6f1-1f25-4915-9a5f-e0395c0bb0f4")
@@ -9509,7 +9518,7 @@
 				)
 			)
 		)
-		(property "Footprint" "LED_SMD:LED_0603_1608Metric"
+		(property "Footprint" "LED_SMD:LED_0805_2012Metric"
 			(at 273.05 165.1 0)
 			(hide yes)
 			(show_name no)
@@ -9553,7 +9562,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C2286"
+		(property "LCSC" "C84256"
 			(at 273.05 165.1 0)
 			(hide yes)
 			(show_name no)
@@ -9566,6 +9575,15 @@
 		)
 		(pin "1"
 			(uuid "78036683-0b33-4ba1-b069-8849af47ab38")
+		)
+		(property "MPN" "NCD0805R1"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
 		)
 		(pin "2"
 			(uuid "aa72df49-7f80-4709-a303-07b62c9fa866")
@@ -11042,7 +11060,7 @@
 				)
 			)
 		)
-		(property "Footprint" "LED_SMD:LED_0603_1608Metric"
+		(property "Footprint" "LED_SMD:LED_0805_2012Metric"
 			(at 273.05 195.58 0)
 			(hide yes)
 			(show_name no)
@@ -11075,7 +11093,7 @@
 				)
 			)
 		)
-		(property "Color" "Blue"
+		(property "Color" "White"
 			(at 0 60.96 0)
 			(hide yes)
 			(show_name no)
@@ -11086,7 +11104,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C2288"
+		(property "LCSC" "C34499"
 			(at 273.05 195.58 0)
 			(hide yes)
 			(show_name no)
@@ -11099,6 +11117,15 @@
 		)
 		(pin "1"
 			(uuid "5ff11904-2cc1-4dbf-be93-ede4111d2d27")
+		)
+		(property "MPN" "KT-0805W"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
 		)
 		(pin "2"
 			(uuid "ecb8a3f2-af8d-4604-a4f0-7d1d633d8a1e")

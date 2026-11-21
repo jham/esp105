@@ -38,7 +38,7 @@ Verify this pinout on **your** unit with a meter before plugging anything in. Pi
 header follows the JST drawing; the "1" and the arrow on the silkscreen mark pin 1 (the top pin
 when the CN105 header is on your left).
 
-**ESP32-C6 module (top right).** U1 with its decoupling (C4, C5), the EN reset circuit (R1, C1, button RESET), the BOOT button (on IO9), and three status LEDs: green PWR (R7, IO23, net LED_PWR), red HEAT (R8, IO22, net LED_HEAT) and blue COOL (R9, IO21 on module pin 27, net LED_COOL). The LEDs, buttons, USB-C and module print their Value (PWR, HEAT, COOL, RESET, BOOT, USB-C, ESP32-C6) on the silkscreen instead of their reference designator.. UART1 is on IO6/IO7 for the
+**ESP32-C6 module (top right).** U1 with its decoupling (C4, C5), the EN reset circuit (R1, C1, button RESET), the BOOT button (on IO9), and three 0805 status LEDs, all JLCPCB basic parts: green PWR (R7, IO23, net LED_PWR), red HEAT (R8, IO22, net LED_HEAT) and white COOL (R9, IO21 on module pin 27, net LED_COOL). The LEDs, buttons, USB-C and module print their Value (PWR, HEAT, COOL, RESET, BOOT, USB-C, ESP32-C6) on the silkscreen instead of their reference designator.. UART1 is on IO6/IO7 for the
 heat pump; UART0 (TXD0/RXD0) is brought out to J3 for a debug console. No strapping pins are used
 except IO9 for the BOOT button.
 

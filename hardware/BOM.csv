@@ -1,5 +1,5 @@
 Reference,Qty,Value,Package,Manufacturer part,LCSC,Notes
-U1,1,ESP32-C6-MINI-1-N4,module,Espressif ESP32-C6-MINI-1-N4,C5736265,Wi-Fi 6 + 802.15.4 (Thread). Antenna end must hang over the board edge / keepout.
+U1,1,ESP32-C6-MINI-1-H8,module,Espressif ESP32-C6-MINI-1-H8,C42403058,Wi-Fi 6 + 802.15.4 (Thread), 8 MB flash (high-temp variant); same footprint as the -N4. Antenna end over the keep-out strip.
 U2,1,AP2112K-3.3,SOT-23-5,Diodes Inc AP2112K-3.3TRG1,C51118,3.3 V LDO 600 mA
 U3,1,74AHCT1G125,SOT-23-5,TI SN74AHCT1G125DBVR,C7484,5 V buffer with TTL input: 3.3 V in / 5 V out. Must be AHCT (not AHC/LVC).
 CN105,1,CN105 header,JST PA 5-pin side entry,JST S05B-PASK-2(LF)(SN),C489718,2.0 mm pitch right-angle header; cable exits parallel to the board. Mates with PAP-05V-S plug on the CN105 cable. Footprint in cn105.pretty.

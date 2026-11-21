@@ -46,8 +46,12 @@ except IO9 for the BOOT button.
 (IO13/IO12), so no USB-UART chip is needed. R4/R5 (5.1k) on CC1/CC2 tell a USB-C charger or laptop
 we want 5 V.
 
-**Power (bottom middle).** D1 (from USB) and D2 (from CN105) are Schottky diodes that OR the two 5 V
-sources into the `+5V` rail. Either source can be present or both; neither can back-feed the other.
+**Power (bottom middle).** Two 5 V sources feed the `+5V` rail. USB comes in through D1, a Schottky.
+The heat pump's 5 V comes in through Q1, a P-channel MOSFET: with no USB present R10 holds its gate low
+and it conducts with about 30 mV of drop; plugging in USB pulls the gate high through the `5V_USB` line
+and switches it off, so USB can never back-feed the heat pump and the heat pump never drives the USB
+port. Q1's body diode still lets the heat pump help out if USB sags. D1 is what keeps the USB line
+separate from the rail so the gate reads "USB present".
 U2 (AP2112K-3.3, 600 mA) makes 3.3 V. The four PWR_FLAG symbols are not real parts: they tell
 KiCad's checker that those nets are powered.
 
@@ -120,7 +124,7 @@ Why things are where they are:
   Decoupling caps C5/C4 are as close to the 3V3 pad as the keep-out allows.
 - R2, R3 (divider), U3 (buffer), R7, C6 sit between J1 and the module's bottom-left pads where
   IO6/IO7 come out.
-- The power chain reads left to right: D2 → C2 → U2 → C3.
+- The power chain reads left to right: Q1 (with R10 beside it) → C2 → U2 → C3.
 - R4/R5 are next to J2's CC pads; D1 is between J2's VBUS pads and the +5V parts.
 - SW1/SW2 are on the bottom edge where a finger can reach them; J3 too.
 
@@ -225,8 +229,9 @@ over the air. Use `logger: hardware_uart: UART0` so logs go to J3, not to the he
   affects which way the cable's latch faces, not whether it fits.
 - LCSC numbers marked "verify" in `BOM.csv`.
 - U3 must be an **AHCT** part. AHC or LVC in the same package will not translate 3.3 V → 5 V reliably.
-- The heat pump's 5 V pin can supply a few hundred mA on most units. Wi-Fi transmit peaks are
-  short; if you see brown-outs add a 100 µF capacitor across +5V near D2.
+- The heat pump's 5 V pin can supply a few hundred mA on most units. C7 (100 µF on +5V near Q1)
+  is there to ride through Wi-Fi transmit peaks; if you still see resets during Wi-Fi activity,
+  the supply is the suspect.
 - No ESD protection on USB. Fine for a bench board; add a USBLC6-2 later if you care.
 - Thread firmware is still the open question from the earlier conversation; the hardware supports
   both.

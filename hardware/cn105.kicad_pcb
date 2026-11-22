@@ -688,7 +688,7 @@
 				)
 			)
 		)
-		(property "Value" "USBLC6-2SC6"
+		(property "Value" "SRV05-4"
 			(at 0 2.4 0)
 			(layer "F.Fab")
 			(uuid "abd96533-7031-4deb-9429-ea8709c568ac")
@@ -710,7 +710,7 @@
 				)
 			)
 		)
-		(property "Description" "USB ESD protection for D+, D- and VBUS"
+		(property "Description" "USB ESD protection for D+, D- and VBUS (4-ch array; pins 1+6 and 3+4 paired on the board)"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -733,7 +733,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C2827654"
+		(property "LCSC" "C85364"
 			(at 0 0 180)
 			(unlocked yes)
 			(layer "F.Fab")
@@ -746,7 +746,7 @@
 				)
 			)
 		)
-		(property "MPN" "USBLC6-2SC6"
+		(property "MPN" "SRV05-4-P-T7"
 			(at 0 0 180)
 			(unlocked yes)
 			(layer "F.Fab")

@@ -13824,7 +13824,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "USBLC6-2SC6"
+		(property "Value" "SRV05-4"
 			(at 125.73 166.37 0)
 			(effects
 				(font
@@ -13851,7 +13851,7 @@
 				)
 			)
 		)
-		(property "Description" "USB ESD protection for D+, D- and VBUS"
+		(property "Description" "USB ESD protection for D+, D- and VBUS (4-ch array; pins 1+6 and 3+4 paired on the board)"
 			(at 119.38 160.02 0)
 			(hide yes)
 			(effects
@@ -13860,7 +13860,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C2827654"
+		(property "LCSC" "C85364"
 			(at 119.38 160.02 0)
 			(hide yes)
 			(effects
@@ -13869,7 +13869,7 @@
 				)
 			)
 		)
-		(property "MPN" "USBLC6-2SC6"
+		(property "MPN" "SRV05-4-P-T7"
 			(at 119.38 160.02 0)
 			(hide yes)
 			(effects

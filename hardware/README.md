@@ -48,7 +48,7 @@ boot mode never depends on the weak internal pull-ups; the rest are left unconne
 
 **USB-C (bottom left).** USB-C wired for USB 2.0 only: D+/D- go straight to the C6's native USB pins
 (IO13/IO12), so no USB-UART chip is needed. R4/R5 (5.1k) on CC1/CC2 tell a USB-C charger or laptop
-we want 5 V. U4 (USBLC6-2SC6) clamps ESD on D+, D- and VBUS, since the port lives in a damp metal
+we want 5 V. U4 (SRV05-4, a 4-channel TVS array with pins 1+6 and 3+4 paired on the board) clamps ESD on D+, D- and VBUS, since the port lives in a damp metal
 box and gets plugged into by hand.
 
 **Power (bottom middle).** Two 5 V sources feed the `+5V` rail. USB comes in through D1, a Schottky.

@@ -5798,6 +5798,19 @@
 				)
 			)
 		)
+		(property "MPN" "TS-1187A-B-A-B"
+			(at 0 0 180)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "36233bcf-76c6-4463-8d2a-2f1b8ee2a0f2")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(path "/5dc70c67-f090-47bd-a654-400e55777ed4")
 		(sheetname "/")
 		(sheetfile "cn105.kicad_sch")
@@ -8818,6 +8831,19 @@
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "d3cc2c6a-ac60-4052-8a4c-a32bbef97d22")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "MPN" "TS-1187A-B-A-B"
+			(at 0 0 180)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "fac07131-2668-4168-b262-75f34120f4d2")
 			(effects
 				(font
 					(size 1 1)

@@ -10581,6 +10581,17 @@
 				)
 			)
 		)
+		(property "MPN" "TS-1187A-B-A-B"
+			(at 278.13 80.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "6bd0a537-da93-48a9-aab4-37ce5feacbc0")
 		)
@@ -12996,6 +13007,17 @@
 			)
 		)
 		(property "LCSC" "C318884"
+			(at 278.13 104.14 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "TS-1187A-B-A-B"
 			(at 278.13 104.14 0)
 			(hide yes)
 			(show_name no)

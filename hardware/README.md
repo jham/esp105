@@ -3,10 +3,11 @@
 A small board that plugs into the CN105 port of a Mitsubishi mini-split, is powered by it, and talks
 to it over its 5 V serial port using an ESP32-C6 module (Wi-Fi or Thread, chosen in firmware).
 
-**The schematic is finished and ERC-clean. The board has every part placed and ground pours on
-both layers, with 0 DRC errors. What is left is the routing**: 37 connections to draw as copper
-tracks, plus any placement tweaks you want. The rest of this file walks you through it in
-KiCad 10 step by step. Expect 1–2 hours for a first routing pass.
+**Status: schematic and board are complete.** ERC 0, DRC 0 errors, schematic parity 0, both
+layers routed with ground pours. The BOM's LCSC numbers were checked against JLCPCB's parts
+database and an independent design review was applied (TVS on the CN105 input, USB ESD protection,
+IO8 strapping pull-up, LED currents). The steps below were written as a walkthrough for doing the
+layout by hand in KiCad 10 and still apply to any change you make.
 
 ## What is in this folder
 
@@ -14,7 +15,7 @@ KiCad 10 step by step. Expect 1–2 hours for a first routing pass.
 |---|---|
 | `cn105.kicad_pro` | The project. Double-click this to open KiCad. Contains JLCPCB-friendly design rules and two net classes (Default 0.25 mm tracks, Power 0.5 mm). |
 | `cn105.kicad_sch` | The schematic. Complete, 0 ERC errors, 0 warnings. |
-| `cn105.kicad_pcb` | The board: 48 × 30 mm outline, all 26 footprints placed, GND pours on both layers, antenna keep-out. **Not routed.** |
+| `cn105.kicad_pcb` | The board: 48 × 30 mm, 2 layers, fully routed, GND pours on both layers, antenna keep-out. DRC 0 errors. |
 | `cn105.pretty/` | Project footprint library: JST PA header footprints for CN105 (top-entry B05B-PASK and side-entry S05B-PASK-2, drawn from the JST drawing), plus project copies of the ESP32-C6-MINI-1, HRO USB-C and TS-1187A switch footprints with working 3D models. |
 | `cn105.3dshapes/` | 3D models not shipped with KiCad: Espressif's official `ESP32-C6-MINI-1.step` and plain-box placeholders for the two JST PA headers (from `tools/models.py`). The USB-C uses KiCad's GCT USB4105 model and the switches use KiCad's Alps SKRK model, both near-identical parts. |
 | `fp-lib-table` | Tells KiCad about `cn105.pretty`. Don't delete it. |
@@ -38,13 +39,15 @@ Verify this pinout on **your** unit with a meter before plugging anything in. Pi
 header follows the JST drawing; the "1" and the arrow on the silkscreen mark pin 1 (the top pin
 when the CN105 header is on your left).
 
-**ESP32-C6 module (top right).** U1 with its decoupling (C4, C5), the EN reset circuit (R1, C1, button RESET), the BOOT button (on IO9), and three 0805 status LEDs, all JLCPCB basic parts: green PWR (R7, IO23, net LED_PWR), red HEAT (R8, IO22, net LED_HEAT) and white COOL (R9, IO21 on module pin 27, net LED_COOL). The LEDs, buttons, USB-C and module print their Value (PWR, HEAT, COOL, RESET, BOOT, USB-C, ESP32-C6) on the silkscreen instead of their reference designator.. UART1 is on IO6/IO7 for the
-heat pump; UART0 (TXD0/RXD0) is brought out to J3 for a debug console. No strapping pins are used
-except IO9 for the BOOT button.
+**ESP32-C6 module (top right).** U1 with its decoupling (C4, C5), the EN reset circuit (R1, C1, button RESET), the BOOT button (on IO9), and three 0805 status LEDs, all JLCPCB basic parts: green PWR (R7, IO23, net LED_PWR), red HEAT (R8, IO22, net LED_HEAT) and white COOL (R9, IO21 on module pin 27, net LED_COOL). The LEDs, buttons, USB-C and module print their Value (PWR, HEAT, COOL, RESET, BOOT, USB-C, ESP32-C6) on the silkscreen instead of their reference designator. UART1 is on IO6/IO7 for the
+heat pump; UART0 is unused, so the console is the module's USB-Serial-JTAG over the USB-C port. Of
+the strapping pins, IO9 is the BOOT button and both IO9 and IO8 carry 10k pull-ups (R12, R11) so
+boot mode never depends on the weak internal pull-ups; the rest are left unconnected.
 
 **USB-C (bottom left).** USB-C wired for USB 2.0 only: D+/D- go straight to the C6's native USB pins
 (IO13/IO12), so no USB-UART chip is needed. R4/R5 (5.1k) on CC1/CC2 tell a USB-C charger or laptop
-we want 5 V.
+we want 5 V. U4 (USBLC6-2SC6) clamps ESD on D+, D- and VBUS, since the port lives in a damp metal
+box and gets plugged into by hand.
 
 **Power (bottom middle).** Two 5 V sources feed the `+5V` rail. USB comes in through D1, a Schottky.
 The heat pump's 5 V comes in through Q1, a P-channel MOSFET: with no USB present R10 holds its gate low
@@ -115,8 +118,8 @@ Why things are where they are:
  | CN105 R1 C1 |  U1 module  |              USB-C   |
  | (left) R2 R3|_____________|  D1       (right)    |
  |        U3  R7 C6   U1       R6 D3                |
- |  H1  D2 C2 U2 C3                                 |
- |              J3        SW1     SW2      H2       |
+ |  H1  Q1 C7 C2 U2 C3                              |
+ |                        SW1     SW2      H2       |
  +-------------------------------------------------+
 ```
 
@@ -126,7 +129,7 @@ Why things are where they are:
   IO6/IO7 come out.
 - The power chain reads left to right: Q1 (with R10 beside it) → C2 → U2 → C3.
 - R4/R5 are next to J2's CC pads; D1 is between J2's VBUS pads and the +5V parts.
-- SW1/SW2 are on the bottom edge where a finger can reach them; J3 too.
+- SW1/SW2 are on the bottom edge where a finger can reach them.
 
 If you move something, keep courtyards (thin outlines) from overlapping and re-run DRC
 (step 5). To put everything back exactly as delivered, see the last section.
@@ -137,7 +140,7 @@ If you move something, keep courtyards (thin outlines) from overlapping and re-r
    click the destination pad to finish. `V` while routing drops a via and switches to the other
    layer. `Esc` cancels. The router pushes other tracks out of the way by default; that's fine.
 2. Track width comes from the net class automatically. Power nets will be 0.5 mm, signals 0.25 mm.
-3. Order: **power first** (J1 pin 3 → D2 → +5V → C2/U2 → +3V3 → C3 → C4/C5 → module 3V3 pin,
+3. Order: **power first** (CN105 pin 3 → Q1 → C7/C2 → U2 → +3V3 → C3 → C4/C5 → module 3V3 pin,
    plus +5V to U3's VCC and D1), then the USB pair, then the UART signals, then buttons and LED.
 4. GND pads are already connected through the pours, so you never route GND. If a GND pad shows a
    ratsnest line, press `B` to refill the zones.
@@ -155,7 +158,7 @@ If you move something, keep courtyards (thin outlines) from overlapping and re-r
    delivered board has 0 errors and ~16 warnings, all silkscreen: reference text crossing a
    neighbour's pad or the board edge. Move the text (hover it, `M`) or ignore them.
 2. Add text (`Ctrl+Shift+T`) next to J1 reading `CN105  1=12V 2=GND 3=5V 4=TX 5=RX` on `F.SilkS`.
-   Future-you will be grateful. Add `TX RX GND` near J3, and a project name and version somewhere.
+   Future-you will be grateful. Add a project name and version somewhere.
 3. Press `B` to refill zones after any change, then run DRC once more.
 4. Print 1:1 (File → Print, scale 1) and lay the real JST header and USB-C on the paper.
 
@@ -210,7 +213,8 @@ output:
 ```
 
 Flash over USB-C the first time (hold BOOT, tap RESET, release BOOT, then upload). After that
-over the air. Use `logger: hardware_uart: UART0` so logs go to J3, not to the heat pump.
+over the air. Leave the logger on its default (USB-Serial-JTAG) so nothing is printed on the
+heat-pump UART. The H8 module has 8 MB flash: set `flash_size: 8MB` under `esp32:`.
 
 ## Bring-up checklist
 
@@ -220,6 +224,10 @@ over the air. Use `logger: hardware_uart: UART0` so logs go to J3, not to the he
 3. Measure J1 pin 5 relative to pin 2: ~5 V (USB-powered it'll read ~4.6 V). That's UART idle.
 4. Only now plug into the heat pump. Confirm pin 3 is 5 V and pin 2 is ground **with the cable
    unplugged from the board** first, meter on the heat pump side.
+5. **Do not have USB and the heat pump connected at the same time** unless the USB host is
+   battery powered or you use a USB isolator. USB ties the heat pump's control ground to the
+   PC's earth through this board, and the two are not guaranteed to agree. Flash on the bench,
+   then install; use OTA afterwards.
 
 ## Things I assumed that you should double-check
 
@@ -232,7 +240,11 @@ over the air. Use `logger: hardware_uart: UART0` so logs go to J3, not to the he
 - The heat pump's 5 V pin can supply a few hundred mA on most units. C7 (100 µF on +5V near Q1)
   is there to ride through Wi-Fi transmit peaks; if you still see resets during Wi-Fi activity,
   the supply is the suspect.
-- No ESD protection on USB. Fine for a bench board; add a USBLC6-2 later if you care.
+- The CN105 5 V input has a TVS (D3, SMF5.0A) that clamps at about 9 V. It protects against a
+  mis-wired cable; it is not a substitute for checking the pinout, since a sustained 12 V would
+  eventually cook it.
+- It lives next to a cold coil: conformal-coat the assembled board (mask the two connectors),
+  mount it above the drip path, and point the USB-C opening down or cap it.
 - Thread firmware is still the open question from the earlier conversation; the hardware supports
   both.
 

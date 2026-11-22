@@ -6,7 +6,7 @@ U4,1,SRV05-4,SOT-23-6,Semtech SRV05-4-P-T7,C85364,USB ESD protection on D+ / D- 
 CN105,1,CN105 header,JST PA 5-pin side entry,JST S05B-PASK-2(LF)(SN),C489718,2.0 mm pitch right-angle header; cable exits parallel to the board. Mates with PAP-05V-S plug on the CN105 cable. Footprint in cn105.pretty.
 USB-C1,1,USB-C receptacle,HRO TYPE-C-31-M-12,HRO TYPE-C-31-M-12,C165948,16-pin USB 2.0 receptacle
 RESET1 BOOT1,2,tactile switch,5.1x5.1 mm SMD,XKB TS-1187A-B-A-B,C318884,RESET and BOOT
-D3,1,SMF5.0A,SOD-123F,SMF5.0A,C193402,5 V TVS across the CN105 5 V input; clamps a mis-wired cable before it reaches U2/U3. Extended part
+D3,1,SMAJ5.0A,SMA (DO-214AC),SMAJ5.0A,C2925443,5 V 400 W TVS across the CN105 5 V input; clamps a mis-wired cable before it reaches U2/U3. JLCPCB preferred extended part (no loading fee)
 D1,1,1N5819WS,SOD-323,1N5819WS,C191023,Schottky from USB 5V_USB into the +5V rail; also isolates the USB line that drives Q1's gate
 Q1,1,AO3401A,SOT-23,Alpha & Omega AO3401A,C15127,P-channel MOSFET passing CN105 5 V to the +5V rail (~30 mV drop); gate tied to 5V_USB so USB switches it off. JLCPCB basic part
 PWR1,1,PWR LED (green),0805,Hubei KENTO KT-0805G,C2297,Green power/status LED on IO23 (net LED_PWR)

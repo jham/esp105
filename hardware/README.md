@@ -242,7 +242,7 @@ heat-pump UART. The H8 module has 8 MB flash: set `flash_size: 8MB` under `esp32
 - The heat pump's 5 V pin can supply a few hundred mA on most units. C7 (100 µF on +5V near Q1)
   is there to ride through Wi-Fi transmit peaks; if you still see resets during Wi-Fi activity,
   the supply is the suspect.
-- The CN105 5 V input has a TVS (D3, SMF5.0A) that clamps at about 9 V. It protects against a
+- The CN105 5 V input has a TVS (D3, SMAJ5.0A) that clamps at about 9 V. It protects against a
   mis-wired cable; it is not a substitute for checking the pinout, since a sustained 12 V would
   eventually cook it.
 - It lives next to a cold coil: conformal-coat the assembled board (mask the two connectors),

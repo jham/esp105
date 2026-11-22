@@ -9,6 +9,8 @@ database and an independent design review was applied (TVS on the CN105 input, U
 IO8 strapping pull-up, LED currents). The steps below were written as a walkthrough for doing the
 layout by hand in KiCad 10 and still apply to any change you make.
 
+![Top of the board](cn105-board-3d.png)
+
 ## What is in this folder
 
 | File | What it is |
@@ -20,7 +22,7 @@ layout by hand in KiCad 10 and still apply to any change you make.
 | `cn105.3dshapes/` | 3D models not shipped with KiCad: Espressif's official `ESP32-C6-MINI-1.step` and plain-box placeholders for the two JST PA headers (from `tools/models.py`). The USB-C uses KiCad's GCT USB4105 model and the switches use KiCad's Alps SKRK model, both near-identical parts. |
 | `fp-lib-table` | Tells KiCad about `cn105.pretty`. Don't delete it. |
 | `BOM.csv` | Parts list with LCSC numbers for JLCPCB assembly. Numbers marked "verify" were from memory; check them in the JLC parts search before ordering. |
-| `cn105-schematic.pdf`, `cn105-board-3d.png` | Printable schematic and a 3D render of the placed board. |
+| `cn105-board-3d.png` | 3D render of the routed board, regenerated with `kicad-cli pcb render` after each board change. |
 | `tools/` | The Python scripts that generated everything. `gen.py` writes the schematic and a blank board, `place.py` fills the board. **Both overwrite your work**; see the last section. |
 
 ## How the circuit works (read this with the schematic open)

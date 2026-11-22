@@ -11,3 +11,10 @@ talks to it over its serial port with an ESP32-C6 (Wi-Fi or Thread).
 | [`software/`](software/) | Firmware (ESPHome configuration) — to come. |
 
 Open the board in KiCad via `hardware/cn105.kicad_pro`.
+
+## License
+
+Copyright 2026 Jeff Hamilton. Licensed under the [Solderpad Hardware License v2.1](https://solderpad.org/licenses/SHL-2.1/),
+an Apache 2.0 wraparound for hardware designs (SPDX: `Apache-2.0 WITH SHL-2.1`). It covers the
+schematic, board, libraries, BOM and firmware alike; at your option you may treat the whole work as
+plain Apache 2.0. See [LICENSE](LICENSE).

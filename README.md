@@ -14,7 +14,11 @@ Open the board in KiCad via `hardware/cn105.kicad_pro`.
 
 ## License
 
-Copyright 2026 Jeff Hamilton. Licensed under the [Solderpad Hardware License v2.1](https://solderpad.org/licenses/SHL-2.1/),
-an Apache 2.0 wraparound for hardware designs (SPDX: `Apache-2.0 WITH SHL-2.1`). It covers the
-schematic, board, libraries, BOM and firmware alike; at your option you may treat the whole work as
-plain Apache 2.0. See [LICENSE](LICENSE).
+Copyright 2026 Jeff Hamilton.
+
+This source describes Open Hardware and is licensed under the
+[CERN Open Hardware Licence Version 2 - Permissive](https://ohwr.org/cern_ohl_p_v2.txt)
+(SPDX: `CERN-OHL-P-2.0`). You may redistribute and modify this documentation and make products
+using it under the terms of that licence. It is distributed WITHOUT ANY EXPRESS OR IMPLIED
+WARRANTY, INCLUDING OF MERCHANTABILITY, SATISFACTORY QUALITY AND FITNESS FOR A PARTICULAR PURPOSE.
+See [LICENSE](LICENSE) for the full text and conditions.

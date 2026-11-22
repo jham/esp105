@@ -267,3 +267,14 @@ footprints, tracks and pours on the board and places everything again from the f
 script (edit `PLACE` there to change it). Run `place.py` alone to reset placement without touching
 the schematic. Neither preserves tracks you have routed, so don't run them after step 4 unless
 you mean it.
+
+## License
+
+Copyright 2026 Jeff Hamilton.
+
+This source describes Open Hardware and is licensed under the
+[CERN Open Hardware Licence Version 2 - Permissive](https://ohwr.org/cern_ohl_p_v2.txt)
+(SPDX: `CERN-OHL-P-2.0`). You may redistribute and modify this documentation and make products
+using it under the terms of that licence. It is distributed WITHOUT ANY EXPRESS OR IMPLIED
+WARRANTY, INCLUDING OF MERCHANTABILITY, SATISFACTORY QUALITY AND FITNESS FOR A PARTICULAR PURPOSE.
+See [LICENSE](LICENSE) for the full text and conditions.

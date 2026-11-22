@@ -23,7 +23,7 @@ layout by hand in KiCad 10 and still apply to any change you make.
 | `fp-lib-table` | Tells KiCad about `cn105.pretty`. Don't delete it. |
 | `BOM.csv` | Parts list with LCSC numbers for JLCPCB assembly. Numbers marked "verify" were from memory; check them in the JLC parts search before ordering. |
 | `cn105-board-3d.png` | 3D render of the routed board, regenerated with `kicad-cli pcb render` after each board change. |
-| `tools/` | The Python scripts that generated everything. `gen.py` writes the schematic and a blank board, `place.py` fills the board. **Both overwrite your work**; see the last section. |
+| `tools/` | `export_jlcpcb.sh` writes the JLCPCB order files into `production/` (see Step 6). The rest are the Python scripts that generated everything. `gen.py` writes the schematic and a blank board, `place.py` fills the board. **Both overwrite your work**; see the last section. |
 
 ## How the circuit works (read this with the schematic open)
 
@@ -166,14 +166,31 @@ If you move something, keep courtyards (thin outlines) from overlapping and re-r
 
 ## Step 6 — Order it (JLCPCB)
 
-1. **File → Fabrication Outputs → Gerbers.** Layers: F.Cu, B.Cu, F.Paste, F.SilkS, F.Mask, B.Mask,
-   Edge.Cuts. Output folder `gerbers/`. Click **Plot**, then **Generate Drill Files** (Excellon,
-   PTH and NPTH merged is fine) → **Generate**.
-2. Zip the `gerbers/` folder and upload to jlcpcb.com. 1.6 mm, 2 layers, any colour. 5 boards.
-3. For assembly: install the "Fabrication Toolkit" plugin (Plugin and Content Manager) and run it;
-   it writes the BOM and placement CSVs in JLC's format using the `LCSC` field already on every
-   part. Choose "Economic" assembly, top side only.
-4. Before paying, open the assembly preview and check that U1, J1 and J2 are the right way round.
+1. Run the export script (it needs KiCad installed in /Applications):
+
+   ```bash
+   sh tools/export_jlcpcb.sh
+   ```
+
+   It writes `production/` (git-ignored): `cn105-gerbers.zip` (Gerbers for F.Cu, B.Cu, both
+   masks, both silkscreens, F.Paste, Edge.Cuts, plus Excellon PTH/NPTH drills),
+   `cn105-bom-jlcpcb.csv` and `cn105-cpl-jlcpcb.csv` in JLC's column format, built from the
+   `LCSC` and `MPN` fields on every part. Mounting holes are skipped. Through-hole parts (CN105)
+   are reported at the centre of their pin pattern, which is what JLC's preview expects; KiCad's
+   own position export would put them on pin 1 and the preview would draw the body shifted.
+2. jlcpcb.com → Order now → upload `cn105-gerbers.zip`. Defaults are right: 2 layers, 1.6 mm,
+   48 × 30 mm, 5 boards, any colour, HASL or ENIG. Leave "Remove Order Number" on if you don't
+   want JLC's job number printed on the board.
+3. Turn on **PCB Assembly**: Economic, top side, 5 boards (or 2 if you want to keep it cheap).
+   Upload the BOM and CPL CSVs. All 24 lines should resolve; if JLC flags one out of stock, pick
+   the suggested equivalent or check `BOM.csv` for the intent of that part.
+4. **Check the placement preview before paying.** JLC's rotation zero differs from KiCad's for
+   some packages, so verify the polarised parts against the 3D render: U1 (antenna over the
+   keep-out strip at the top edge), U2/U3/U4 pin 1, Q1, D1 and D3 cathode bands, the three LEDs,
+   the CN105 header opening at the left edge and the USB-C opening at the right edge. Fix any
+   with the rotate buttons in the preview.
+5. Extended-part fee: U1, U2, U3, CN105 and USB-C1 are extended parts (about $3 each per order);
+   U4 and D3 are "preferred" extended parts with no fee; everything else is basic.
 
 ## Firmware starting point (ESPHome)
 

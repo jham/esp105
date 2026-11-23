@@ -7,7 +7,7 @@
 	(title_block
 		(title "Mitsubishi CN105 <-> ESP32-C6 adapter")
 		(date "2026-11-23")
-		(rev "0.2.0")
+		(rev "0.3.0")
 		(comment 1 "Starter schematic. Verify the CN105 pinout on your unit before use.")
 	)
 	(lib_symbols

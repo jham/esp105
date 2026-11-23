@@ -2,7 +2,23 @@
 
 One entry per board order, newest first. Board versions are semver; the git tag is `v<version>`
 (tags `v0.1` and `v0.2` predate the three-part numbering and mean 0.1.0 and 0.2.0). The order files
-for any entry can be regenerated from its commit with `sh tools/export_jlcpcb.sh`.
+for any entry can be regenerated from its commit with `sh tools/export_jlcpcb.sh`. JLCPCB order
+numbers are deliberately not recorded here; this repository is public.
+
+## 0.3.0 — 2026-11-23
+
+- Tag `v0.3.0`, commit see tag. Ordered from JLCPCB on 2026-11-23.
+- Fab: 2 layers, 1.6 mm, 41.8 × 37.6 mm, green, lead-free HASL. Assembly: Economic, top side,
+  24 BOM lines / 33 parts, 5 boards.
+- Changes since 0.2.0: the CN105 link is now a 4-pin Grove HY2.0 right-angle SMD socket
+  (Megastar ZX-HY2.0-4PWT) for a CN105-to-Grove cable (serin-labs.com/wiring.html pinout),
+  replacing the JST PA header; 12 V position unused. Connector footprint origins moved to
+  JLCPCB's reference points (Grove socket and USB-C), so the CPL places both on their pads. Blue
+  COOL LED and rebalanced LED resistors were already in the files but first built here; board
+  version and date now come from the title block (`ESP105 v${REVISION}` silkscreen).
+- Extended parts: U1, U2, U3, CN105, USB-C1, COOL1; preferred (no fee): D3, U4.
+- To verify on arrival: the Grove cable's black wire lands on socket pin 1 (marked "1"); the
+  USB-C sits on its pads (first order with the corrected origin).
 
 ## 0.2.0 — 2026-11-23
 
@@ -13,7 +29,7 @@ for any entry can be regenerated from its commit with `sh tools/export_jlcpcb.sh
   edge, four M2.5 holes). U4 → SRV05-4, D3 → SMAJ5.0A. COOL LED now blue (KT-0805B); LED resistors
   rebalanced (R7 1k, R8/R9 330 Ω). JLC BOM Comment column is the LCSC code.
 - Extended parts: U1, U2, U3, CN105, USB-C1, COOL1; D3 and U4 preferred (no fee).
-- JLCPCB order number, quantity and finish: not recorded.
+- Quantity and finish: not recorded.
 - Known issue found 2026-11-23, after this order: the CPL reported USB-C1 at our footprint's
   origin (shell centre), 1.57 mm toward the board edge from JLCPCB's reference for C165948. If
   JLC's review did not realign the part to its pads, the receptacle sits 1.57 mm proud with its
@@ -27,7 +43,7 @@ for any entry can be regenerated from its commit with `sh tools/export_jlcpcb.sh
   Standard-only at JLCPCB), top side, 24 BOM lines / 33 parts.
 - Design: ESP32-C6-MINI-1-H8, side-entry JST PA CN105 header, HRO USB-C, AP2112K 3.3 V regulator,
   SN74AHCT1G125 TX level shifter, AO3401A power switch, three status LEDs.
-- JLCPCB order number, quantity and finish: not recorded.
+- Quantity and finish: not recorded.
 - Known issue found 2026-11-23, after this order: the CPL reported USB-C1 at our footprint's
   origin (shell centre), 1.57 mm toward the board edge from JLCPCB's reference for C165948. If
   JLC's review did not realign the part to its pads, the receptacle sits 1.57 mm proud with its

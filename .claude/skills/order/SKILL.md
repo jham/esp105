@@ -101,8 +101,9 @@ Tell the user the upload order: Gerbers zip on the PCB step; then PCB Assembly (
 part is Standard-only), top side, BOM and CPL on the assembly step; check the parts page for
 matches; check the placement preview for connector positions and polarised-part rotations.
 
-Ask the user to confirm once the order is submitted, and ask for the JLCPCB order number, the
-quantity, the PCB colour and finish, and the assembly service used. Wait for the answer. If they
+Ask the user to confirm once the order is submitted, and ask for the quantity, the PCB colour
+and finish, and the assembly service used. Never ask for or record the JLCPCB order number: the
+repository is public. Wait for the answer. If they
 say they did not order, stop here, leave the files changed but uncommitted, and say so.
 
 ## 6. Log the order
@@ -114,7 +115,7 @@ Add an entry at the top of `hardware/ORDER_LOG.md` (newest first) in the existin
 
 - Tag `v<version>`, commit <filled in after the commit>. Ordered from JLCPCB on <date>.
 - Fab: 2 layers, 1.6 mm, <W × H> mm, <colour>, <finish>. Assembly: <Economic|Standard>, top
-  side, <n> BOM lines / <n> parts, <quantity> boards. JLCPCB order <number>.
+  side, <n> BOM lines / <n> parts, <quantity> boards.
 - Changes since <previous version>: <what changed, in design terms>.
 - Extended parts: <list>; preferred (no fee): <list>.
 ```

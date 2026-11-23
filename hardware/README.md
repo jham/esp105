@@ -3,7 +3,7 @@
 A small board that plugs into the CN105 port of a Mitsubishi mini-split, is powered by it, and talks
 to it over its 5 V serial port using an ESP32-C6 module (Wi-Fi or Thread, chosen in firmware).
 
-**Design state:** schematic and board complete at version 0.2.0 (see the title block, the
+**Design state:** schematic and board complete at version 0.3.0 (see the title block, the
 `ESP105 v…` silkscreen, and [ORDER_LOG.md](ORDER_LOG.md) for what has been built). ERC 0, DRC 0
 errors, schematic parity 0. Board 41.8 × 37.6 mm, 2 layers, ESP32-C6-WROOM-1-N8 with its antenna
 overhanging the top edge, Grove socket for the CN105 cable and USB-C both on the bottom edge, four M2.5 holes. The

@@ -33,3 +33,6 @@ __pycache__/
 
 # Editor local-history folder (its own git repo)
 .history/
+
+# KiCad crash-recovery copies
+*.kicad-save-*

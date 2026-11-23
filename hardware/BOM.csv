@@ -1,5 +1,5 @@
 Reference,Qty,Value,Package,Manufacturer part,LCSC,Notes
-U1,1,ESP32-C6-MINI-1-H8,module,Espressif ESP32-C6-MINI-1-H8,C42403058,Wi-Fi 6 + 802.15.4 (Thread), 8 MB flash (high-temp variant); same footprint as the -N4. Antenna end over the keep-out strip.
+U1,1,ESP32-C6-WROOM-1-N8,module 18 x 25.5 mm,Espressif ESP32-C6-WROOM-1-N8,C5366877,Wi-Fi 6 + 802.15.4 (Thread), 8 MB flash, PCB antenna. JLCPCB Economic-eligible (the MINI-1 used for v0.1 was Standard-only). Antenna end at the board edge, no copper under it.
 U2,1,AP2112K-3.3,SOT-23-5,Diodes Inc AP2112K-3.3TRG1,C51118,3.3 V LDO 600 mA
 U3,1,74AHCT1G125,SOT-23-5,TI SN74AHCT1G125DBVR,C7484,5 V buffer with TTL input: 3.3 V in / 5 V out. Must be AHCT (not AHC/LVC).
 U4,1,SRV05-4,SOT-23-6,Semtech SRV05-4-P-T7,C85364,USB ESD protection on D+ / D- / VBUS. 4-channel array used as 2 channels: pads 1+6 (D+) and 3+4 (D-) are joined on the board. JLCPCB preferred extended part (no loading fee)

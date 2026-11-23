@@ -3,7 +3,13 @@
 A small board that plugs into the CN105 port of a Mitsubishi mini-split, is powered by it, and talks
 to it over its 5 V serial port using an ESP32-C6 module (Wi-Fi or Thread, chosen in firmware).
 
-**Status: schematic and board are complete.** ERC 0, DRC 0 errors, schematic parity 0, both
+**Status: rev B in progress.** The v0.1 boards (tag `v0.1`) used the ESP32-C6-MINI-1-H8, which
+JLCPCB only assembles under its Standard service. The schematic now carries the ESP32-C6-WROOM-1-N8
+(Economic-eligible, 8 MB, bigger 18 × 25.5 mm footprint) and the board has been re-laid out around
+it: 41.8 × 37.6 mm, antenna overhanging the top edge, both connectors on the bottom edge, four M2.5
+holes. ERC 0, DRC 0 errors, parity 0. Not yet ordered.
+
+**v0.1 status: schematic and board complete.** ERC 0, DRC 0 errors, schematic parity 0, both
 layers routed with ground pours. The BOM's LCSC numbers were checked against JLCPCB's parts
 database and an independent design review was applied (TVS on the CN105 input, USB ESD protection,
 IO8 strapping pull-up, LED currents). The steps below were written as a walkthrough for doing the
@@ -17,9 +23,10 @@ layout by hand in KiCad 10 and still apply to any change you make.
 |---|---|
 | `cn105.kicad_pro` | The project. Double-click this to open KiCad. Contains JLCPCB-friendly design rules and two net classes (Default 0.25 mm tracks, Power 0.5 mm). |
 | `cn105.kicad_sch` | The schematic. Complete, 0 ERC errors, 0 warnings. |
-| `cn105.kicad_pcb` | The board: 48 × 30 mm, 2 layers, fully routed, GND pours on both layers, antenna keep-out. DRC 0 errors. |
-| `cn105.pretty/` | Project footprint library: JST PA header footprints for CN105 (top-entry B05B-PASK and side-entry S05B-PASK-2, drawn from the JST drawing), plus project copies of the ESP32-C6-MINI-1, HRO USB-C and TS-1187A switch footprints with working 3D models. |
-| `cn105.3dshapes/` | 3D models not shipped with KiCad: Espressif's official `ESP32-C6-MINI-1.step` and plain-box placeholders for the two JST PA headers (from `tools/models.py`). The USB-C uses KiCad's GCT USB4105 model and the switches use KiCad's Alps SKRK model, both near-identical parts. |
+| `cn105.kicad_pcb` | The board: 41.8 × 37.6 mm (rev B; v0.1 was 48 × 30), 2 layers, fully routed, GND pours on both layers, module antenna overhanging the top edge. DRC 0 errors. |
+| `cn105.kicad_sym`, `sym-lib-table` | Project symbol library: the ESP32-C6-WROOM-1 symbol (KiCad 10 does not ship one), derived from the MINI-1 symbol with the WROOM pin numbers. |
+| `cn105.pretty/` | Project footprint library: JST PA header footprints for CN105 (top-entry B05B-PASK and side-entry S05B-PASK-2, drawn from the JST drawing), plus Espressif's official ESP32-C6-WROOM-1 footprint, and project copies of the HRO USB-C and TS-1187A switch footprints with working 3D models (the MINI-1 footprint from v0.1 is kept for reference). |
+| `cn105.3dshapes/` | 3D models not shipped with KiCad: Espressif's official `ESP32-C6-WROOM-1.step` (and the v0.1 `ESP32-C6-MINI-1.step`) and plain-box placeholders for the two JST PA headers (from `tools/models.py`). The USB-C uses KiCad's GCT USB4105 model and the switches use KiCad's Alps SKRK model, both near-identical parts. |
 | `fp-lib-table` | Tells KiCad about `cn105.pretty`. Don't delete it. |
 | `BOM.csv` | Parts list with LCSC numbers for JLCPCB assembly. Numbers marked "verify" were from memory; check them in the JLC parts search before ordering. |
 | `cn105-board-3d.png` | 3D render of the routed board, regenerated with `kicad-cli pcb render` after each board change. |
@@ -91,10 +98,10 @@ Nothing to draw here, but do these so you know the tools:
 3. The thin white lines between pads are the **ratsnest**: each is a connection that still needs a
    copper track. Routing in step 4 is the job of making every one of them disappear. The blue
    fill is the GND pour; pads that are already connected to it have no ratsnest line.
-4. The hatched strip across the top is the **antenna keep-out**. The module's own footprint
-   carries Espressif's rule: nothing within 21.6 mm either side of the module and nothing above
-   the line 5.6 mm below the module's origin. On a 48 mm board that means the whole top strip
-   is off limits. Everything is placed below it. Don't move parts up there; DRC will object.
+4. The hatched strip across the top is the **antenna keep-out**. With the WROOM-1 footprint it is
+   the module's own 6 mm antenna section (the end away from the pins): no copper, tracks, vias or
+   parts under it on either layer, and that end of the module goes at the board edge. Espressif
+   also asks for no metal, including the enclosure, within about 15 mm of the antenna end.
 5. **File → Board Setup → Design Rules → Constraints.** These are already set for JLCPCB's cheap
    2-layer process (0.2 mm clearance, 0.15 mm min track). Look at **Net Classes** too: `Power`
    covers `+5V`, `+3V3`, `GND`, `VBUS` and `5V_CN105`, which makes those tracks wider automatically.
@@ -179,7 +186,7 @@ If you move something, keep courtyards (thin outlines) from overlapping and re-r
    are reported at the centre of their pin pattern, which is what JLC's preview expects; KiCad's
    own position export would put them on pin 1 and the preview would draw the body shifted.
 2. jlcpcb.com → Order now → upload `cn105-gerbers.zip`. Defaults are right: 2 layers, 1.6 mm,
-   48 × 30 mm, 5 boards, any colour, HASL or ENIG. Leave "Remove Order Number" on if you don't
+   41.8 × 37.6 mm, 5 boards, any colour, HASL or ENIG. Leave "Remove Order Number" on if you don't
    want JLC's job number printed on the board.
 3. Turn on **PCB Assembly**: Economic, top side, 5 boards (or 2 if you want to keep it cheap).
    Upload the BOM and CPL CSVs. All 24 lines should resolve; if JLC flags one out of stock, pick
@@ -233,7 +240,7 @@ output:
 
 Flash over USB-C the first time (hold BOOT, tap RESET, release BOOT, then upload). After that
 over the air. Leave the logger on its default (USB-Serial-JTAG) so nothing is printed on the
-heat-pump UART. The H8 module has 8 MB flash: set `flash_size: 8MB` under `esp32:`.
+heat-pump UART. The WROOM-1-N8 module has 8 MB flash: set `flash_size: 8MB` under `esp32:`.
 
 ## Bring-up checklist
 

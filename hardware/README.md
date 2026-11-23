@@ -114,8 +114,17 @@ U3's VCC pin; C2/C3 at U2; C1, C4 and C7 are relaxed. D3 goes next to the Grove 
 short ground return. D1 and R10 can sit anywhere on their nets. The USB D+/D- pair runs side by
 side; a via or two and a few millimetres of length mismatch are fine at USB full speed. Both
 connectors are placed so their openings are flush with the bottom board edge: the Grove footprint
-origin is the centre of its pin row and the housing front is 9.3 mm from it (anchor pads stop at
-9.0 mm so they keep the 0.3 mm copper-to-edge clearance with a flush face), the USB-C origin is the shell centre and the shell front is 3.65 mm from it.
+origin is the centre of its pad pattern (JLCPCB's reference point for the part, 3.85 mm in front
+of the pin row) and the housing front is 5.45 mm from it (anchor pads stop at 5.15 mm so they keep
+the 0.3 mm copper-to-edge clearance with a flush face), the USB-C origin is JLCPCB's reference point for the part (1.57 mm behind the shell centre) and
+the shell front is 5.22 mm from it.
+
+**Footprint origins must match JLCPCB's.** JLC places a part at the origin of *its* footprint
+(EasyEDA's), which is the centre of the pad pattern for connectors. The CPL reports our footprint
+origin, so a project footprint with its origin elsewhere is placed wrong by that offset; the Grove
+socket and the USB-C both had this before 2026-11-23. Check a new footprint against
+`https://easyeda.com/api/products/<LCSC>/components?version=6.5.42` (pad coordinates relative to
+the origin, units of 10 mil) before trusting the placement preview.
 
 **Checks.** `Inspect → Design Rules Checker` with schematic parity on. Expect 0 errors, 0
 unconnected, and six `silk_edge_clearance` warnings where the connector and antenna outlines cross

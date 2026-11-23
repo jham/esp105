@@ -14,6 +14,11 @@ for any entry can be regenerated from its commit with `sh tools/export_jlcpcb.sh
   rebalanced (R7 1k, R8/R9 330 Ω). JLC BOM Comment column is the LCSC code.
 - Extended parts: U1, U2, U3, CN105, USB-C1, COOL1; D3 and U4 preferred (no fee).
 - JLCPCB order number, quantity and finish: not recorded.
+- Known issue found 2026-11-23, after this order: the CPL reported USB-C1 at our footprint's
+  origin (shell centre), 1.57 mm toward the board edge from JLCPCB's reference for C165948. If
+  JLC's review did not realign the part to its pads, the receptacle sits 1.57 mm proud with its
+  pins at the ends of the pads. Check the boards on arrival; the 0.2.0 order may still be
+  correctable through JLC support.
 
 ## 0.1.0 — 2026-11-21
 
@@ -23,3 +28,8 @@ for any entry can be regenerated from its commit with `sh tools/export_jlcpcb.sh
 - Design: ESP32-C6-MINI-1-H8, side-entry JST PA CN105 header, HRO USB-C, AP2112K 3.3 V regulator,
   SN74AHCT1G125 TX level shifter, AO3401A power switch, three status LEDs.
 - JLCPCB order number, quantity and finish: not recorded.
+- Known issue found 2026-11-23, after this order: the CPL reported USB-C1 at our footprint's
+  origin (shell centre), 1.57 mm toward the board edge from JLCPCB's reference for C165948. If
+  JLC's review did not realign the part to its pads, the receptacle sits 1.57 mm proud with its
+  pins at the ends of the pads. Check the boards on arrival; the 0.2.0 order may still be
+  correctable through JLC support.

@@ -40,10 +40,10 @@ write("JST_PA_S05B-PASK-2_1x05_P2.00mm_Horizontal", [
     box(4.0, 6.3, 1.4, 10.4, 1.9, 3.7, BLACK),           # plug opening on the front face
 ])
 
-# Grove / HY2.0-4P right-angle SMD socket (ZX-HY2.0-4PWT): housing 12 x 7.8 x 5.2 mm, back wall at y=1.5, opening at y=9.3
+# Grove / HY2.0-4P right-angle SMD socket (ZX-HY2.0-4PWT): housing 12 x 7.8 x 5.2 mm, back wall at y=-2.35, opening at y=5.45
 write("Grove_HY2.0-4P_Horizontal_SMD", [
-    box(0.0, 5.4, 0, 12.0, 7.8, 5.2, WHITE),
-    box(0.0, 8.6, 0.8, 9.0, 1.5, 3.8, BLACK),            # plug opening on the front face
+    box(0.0, 1.55, 0, 12.0, 7.8, 5.2, WHITE),           # origin = pad-pattern centre; body y -2.35..5.45
+    box(0.0, 4.75, 0.8, 9.0, 1.5, 3.8, BLACK),           # plug opening on the front face
 ])
 
 # (ESP32-C6-MINI-1 uses Espressif's official STEP; USB-C uses KiCad's GCT USB4105 model as a stand-in)

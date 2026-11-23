@@ -11,7 +11,7 @@ D1,1,1N5819WS,SOD-323,1N5819WS,C191023,Schottky from USB 5V_USB into the +5V rai
 Q1,1,AO3401A,SOT-23,Alpha & Omega AO3401A,C15127,P-channel MOSFET passing CN105 5 V to the +5V rail (~30 mV drop); gate tied to 5V_USB so USB switches it off. JLCPCB basic part
 PWR1,1,PWR LED (green),0805,Hubei KENTO KT-0805G,C2297,Green power/status LED on IO23 (net LED_PWR)
 HEAT1,1,HEAT LED (red),0805,NationStar NCD0805R1,C84256,Red heating indicator on IO22 (net LED_HEAT)
-COOL1,1,COOL LED (blue),0805,Hubei KENTO KT-0805B,C2293,Blue cooling indicator on IO21 / module pin 27 (net LED_COOL). JLCPCB extended part
+COOL1,1,COOL LED (blue),0805,Hubei KENTO KT-0805B,C2293,Blue cooling indicator on IO21 / module pin 19 (net LED_COOL). JLCPCB extended part
 R1 R6 R11 R12,4,10k,0603,,C25804,EN pull-up / TX idle pull-up / IO8 and IO9 strapping pull-ups
 R10,1,100k,0603,UNI-ROYAL 0603WAF1003T5E,C25803,Q1 gate pull-down (FET on when no USB)
 R2,1,10k,0603,,C25804,Divider top (heat pump TX 5 V -> ESP RX)
@@ -21,7 +21,7 @@ R7,1,1k,0603,UNI-ROYAL 0603WAF1001T5E,C21190,PWR LED series resistor (green ~0.6
 R8 R9,2,330,0603,UNI-ROYAL 0603WAF3300T5E,C23138,HEAT and COOL LED series resistors (red ~4 mA / ~30 mcd; blue ~1.2 mA / ~25 mcd with Vf near 3 V at 3.3 V drive)
 C1,1,1uF,0603,Samsung CL10A105KB8NNNC,C15849,EN reset delay (with R1). JLCPCB basic part
 C2 C3,2,10uF,0603,,C19702,LDO input / output
-C4,1,22uF,0805,,C45783,Module bulk decoupling (close to U1 pin 3)
+C4,1,22uF,0805,,C45783,Module bulk decoupling (close to U1 pin 2, 3V3)
 C5 C6,2,100nF,0603,YAGEO CC0603KRX7R9BB104,C14663,Module and buffer decoupling. JLCPCB basic part
 C7,1,100uF,1206,Samsung CL31A107MQHNNNE,C15008,Bulk 5 V reservoir for Wi-Fi bursts; near Q1. JLCPCB basic part
-H1 H2 H3,3,M2.5 mounting hole,2.7 mm,,,No part to buy
+H1 H2 H3 H4,4,M2.5 mounting hole,2.7 mm,,,No part to buy

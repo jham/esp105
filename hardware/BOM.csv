@@ -3,7 +3,7 @@ U1,1,ESP32-C6-WROOM-1-N8,module 18 x 25.5 mm,Espressif ESP32-C6-WROOM-1-N8,C5366
 U2,1,AP2112K-3.3,SOT-23-5,Diodes Inc AP2112K-3.3TRG1,C51118,3.3 V LDO 600 mA
 U3,1,74AHCT1G125,SOT-23-5,TI SN74AHCT1G125DBVR,C7484,5 V buffer with TTL input: 3.3 V in / 5 V out. Must be AHCT (not AHC/LVC).
 U4,1,SRV05-4,SOT-23-6,Semtech SRV05-4-P-T7,C85364,USB ESD protection on D+ / D- / VBUS. 4-channel array used as 2 channels: pads 1+6 (D+) and 3+4 (D-) are joined on the board. JLCPCB preferred extended part (no loading fee)
-CN105,1,CN105 header,JST PA 5-pin side entry,JST S05B-PASK-2(LF)(SN),C489718,2.0 mm pitch right-angle header; cable exits parallel to the board. Mates with PAP-05V-S plug on the CN105 cable. Footprint in cn105.pretty.
+CN105,1,Grove socket (CN105 link),HY2.0-4P right-angle SMD,Megastar ZX-HY2.0-4PWT,C7429571,"4-pin Grove / HY2.0 socket, opening on the bottom edge. Mates with the Serin CN105-to-Grove cable (JST PAP-05V-S on the heat pump end): 1 GND, 2 5V, 3 heat-pump TX, 4 heat-pump RX. JLCPCB extended part"
 USB-C1,1,USB-C receptacle,HRO TYPE-C-31-M-12,HRO TYPE-C-31-M-12,C165948,16-pin USB 2.0 receptacle
 RESET1 BOOT1,2,tactile switch,5.1x5.1 mm SMD,XKB TS-1187A-B-A-B,C318884,RESET and BOOT
 D3,1,SMAJ5.0A,SMA (DO-214AC),SMAJ5.0A,C2925443,5 V 400 W TVS across the CN105 5 V input; clamps a mis-wired cable before it reaches U2/U3. JLCPCB preferred extended part (no loading fee)

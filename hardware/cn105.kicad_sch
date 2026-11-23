@@ -913,7 +913,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Connector_Generic:Conn_01x05"
+		(symbol "Connector_Generic:Conn_01x04"
 			(pin_names
 				(offset 1.016)
 				(hide yes)
@@ -924,7 +924,7 @@
 			(in_pos_files yes)
 			(duplicate_pin_numbers_are_jumpers no)
 			(property "Reference" "J"
-				(at 0 7.62 0)
+				(at 0 5.08 0)
 				(show_name no)
 				(do_not_autoplace no)
 				(effects
@@ -933,7 +933,7 @@
 					)
 				)
 			)
-			(property "Value" "Conn_01x05"
+			(property "Value" "Conn_01x04"
 				(at 0 -7.62 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -965,7 +965,7 @@
 					)
 				)
 			)
-			(property "Description" "Generic connector, single row, 01x05, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(property "Description" "Generic connector, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -998,9 +998,9 @@
 					)
 				)
 			)
-			(symbol "Conn_01x05_1_1"
+			(symbol "Conn_01x04_1_1"
 				(rectangle
-					(start -1.27 6.35)
+					(start -1.27 3.81)
 					(end 1.27 -6.35)
 					(stroke
 						(width 0.254)
@@ -1008,17 +1008,6 @@
 					)
 					(fill
 						(type background)
-					)
-				)
-				(rectangle
-					(start -1.27 5.207)
-					(end 0 4.953)
-					(stroke
-						(width 0.1524)
-						(type default)
-					)
-					(fill
-						(type none)
 					)
 				)
 				(rectangle
@@ -1066,7 +1055,7 @@
 					)
 				)
 				(pin passive line
-					(at -5.08 5.08 0)
+					(at -5.08 2.54 0)
 					(length 3.81)
 					(name "Pin_1"
 						(effects
@@ -1084,7 +1073,7 @@
 					)
 				)
 				(pin passive line
-					(at -5.08 2.54 0)
+					(at -5.08 0 0)
 					(length 3.81)
 					(name "Pin_2"
 						(effects
@@ -1102,7 +1091,7 @@
 					)
 				)
 				(pin passive line
-					(at -5.08 0 0)
+					(at -5.08 -2.54 0)
 					(length 3.81)
 					(name "Pin_3"
 						(effects
@@ -1120,7 +1109,7 @@
 					)
 				)
 				(pin passive line
-					(at -5.08 -2.54 0)
+					(at -5.08 -5.08 0)
 					(length 3.81)
 					(name "Pin_4"
 						(effects
@@ -1130,24 +1119,6 @@
 						)
 					)
 					(number "4"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at -5.08 -5.08 0)
-					(length 3.81)
-					(name "Pin_5"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "5"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -4673,10 +4644,6 @@
 	(no_connect
 		(at 339.09 81.28)
 		(uuid "6ca14210-23c3-40a6-8497-aefc5e29613d")
-	)
-	(no_connect
-		(at 45.72 71.12)
-		(uuid "6d9c1d23-858b-4848-8a1d-2ca47bc57321")
 	)
 	(no_connect
 		(at 339.09 96.52)
@@ -10386,7 +10353,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector_Generic:Conn_01x05")
+		(lib_id "Connector_Generic:Conn_01x04")
 		(at 50.8 76.2 0)
 		(unit 1)
 		(body_style 1)
@@ -10417,7 +10384,7 @@
 				)
 			)
 		)
-		(property "Footprint" "cn105:JST_PA_S05B-PASK-2_1x05_P2.00mm_Horizontal"
+		(property "Footprint" "cn105:Grove_HY2.0-4P_Horizontal_SMD"
 			(at 50.8 76.2 0)
 			(hide yes)
 			(show_name no)
@@ -10450,7 +10417,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C489718"
+		(property "LCSC" "C7429571"
 			(at 50.8 76.2 0)
 			(hide yes)
 			(show_name no)
@@ -10461,7 +10428,7 @@
 				)
 			)
 		)
-		(property "MPN" "JST S05B-PASK-2(LF)(SN)"
+		(property "MPN" "ZX-HY2.0-4PWT"
 			(at 50.8 76.2 0)
 			(hide yes)
 			(show_name no)
@@ -10483,9 +10450,6 @@
 		)
 		(pin "4"
 			(uuid "340f3de1-0b68-45be-924c-006085a83744")
-		)
-		(pin "5"
-			(uuid "e6d1f308-56ea-4be8-8edc-2a8723a58ba8")
 		)
 		(instances
 			(project "cn105"

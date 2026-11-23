@@ -6,7 +6,7 @@ to it over its 5 V serial port using an ESP32-C6 module (Wi-Fi or Thread, chosen
 **Design state:** schematic and board complete at version 0.2.0 (see the title block, the
 `ESP105 v…` silkscreen, and [ORDER_LOG.md](ORDER_LOG.md) for what has been built). ERC 0, DRC 0
 errors, schematic parity 0. Board 41.8 × 37.6 mm, 2 layers, ESP32-C6-WROOM-1-N8 with its antenna
-overhanging the top edge, CN105 header and USB-C both on the bottom edge, four M2.5 holes. The
+overhanging the top edge, Grove socket for the CN105 cable and USB-C both on the bottom edge, four M2.5 holes. The
 LCSC numbers in the BOM were checked against JLCPCB's parts database. Board versions are semver;
 the git tag is `v<version>` (the early tags `v0.1` and `v0.2` mean 0.1.0 and 0.2.0).
 
@@ -20,8 +20,8 @@ the git tag is `v<version>` (the early tags `v0.1` and `v0.2` mean 0.1.0 and 0.2
 | `cn105.kicad_sch` | The schematic. Complete, ERC 0. Its title block carries the board version and date. |
 | `cn105.kicad_pcb` | The board: 41.8 × 37.6 mm, 2 layers, fully routed, GND pours on both layers. DRC 0 errors. Its title block rev/date feed the `ESP105 v${REVISION}` and `${ISSUE_DATE}` silkscreen texts on the back. |
 | `cn105.kicad_sym`, `sym-lib-table` | Project symbol library: the ESP32-C6-WROOM-1 symbol (KiCad 10 does not ship one), derived from the MINI-1 symbol with the WROOM pin numbers. |
-| `cn105.pretty/`, `fp-lib-table` | Project footprint library: the JST PA header footprints for CN105 (top-entry B05B-PASK and side-entry S05B-PASK-2, drawn from the JST drawing), Espressif's official ESP32-C6-WROOM-1 footprint, and project copies of the HRO USB-C and TS-1187A switch footprints with working 3D models. The ESP32-C6-MINI-1 footprint from 0.1.0 is kept for reference. Don't delete `fp-lib-table`. |
-| `cn105.3dshapes/` | 3D models not shipped with KiCad: Espressif's `ESP32-C6-WROOM-1.step` (and the 0.1.0 `ESP32-C6-MINI-1.step`) and plain-box placeholders for the JST PA headers. The USB-C uses KiCad's GCT USB4105 model and the switches KiCad's Alps SKRK model, both near-identical parts. |
+| `cn105.pretty/`, `fp-lib-table` | Project footprint library: the Grove HY2.0-4P right-angle SMD socket (drawn from the Megastar ZX-HY2.0-4PWT drawing), Espressif's official ESP32-C6-WROOM-1 footprint, and project copies of the HRO USB-C and TS-1187A switch footprints with working 3D models. The JST PA header footprints (CN105 header through 0.2.0) and the ESP32-C6-MINI-1 footprint from 0.1.0 are kept for reference. Don't delete `fp-lib-table`. |
+| `cn105.3dshapes/` | 3D models not shipped with KiCad: Espressif's `ESP32-C6-WROOM-1.step` (and the 0.1.0 `ESP32-C6-MINI-1.step`) and plain-box placeholders for the Grove socket and the JST PA headers (from `tools/models.py`). The USB-C uses KiCad's GCT USB4105 model and the switches KiCad's Alps SKRK model, both near-identical parts. |
 | `BOM.csv` | Human-readable parts list with LCSC numbers and the reason for each part. The JLCPCB-format BOM is generated, see below. |
 | `cn105-board-3d.png` | Render of the board, regenerated with `kicad-cli pcb render` after board changes. |
 | `ORDER_LOG.md` | One entry per board order: version, date, tag, fab and assembly options, what changed. |
@@ -29,20 +29,23 @@ the git tag is `v<version>` (the early tags `v0.1` and `v0.2` mean 0.1.0 and 0.2
 
 ## How the circuit works (read this with the schematic open)
 
-**CN105 interface.** The heat pump's port is a 5-pin JST PA, 2.0 mm pitch:
+**CN105 interface.** The board carries a 4-pin Grove (HY2.0) socket, reference CN105, and connects
+to the heat pump's CN105 port with a CN105-to-Grove cable wired as on
+[serin-labs.com/wiring.html](https://serin-labs.com/wiring.html): JST PAP-05V-S on the heat pump
+end, Grove HY2.0-4P on ours, four conductors, the 12 V position left empty.
 
-| Pin | Signal | Used for |
-|---|---|---|
-| 1 | 12 V | Not used (left as a no-connect) |
-| 2 | GND | Ground |
-| 3 | 5 V | Powers the whole board |
-| 4 | TX (from heat pump, 5 V logic) | Goes through R2/R3 (10k/15k), which divides 5 V to 3.0 V, then into ESP IO7 (UART RX) |
-| 5 | RX (into heat pump) | Driven by U3, a 74AHCT1G125 buffer powered from 5 V, so the heat pump gets a real 5 V signal. U3's input is ESP IO6 (UART TX). R6 holds that line high while the ESP is still booting so the heat pump never sees garbage. |
+| Grove pin | Wire | CN105 pin | Signal | Used for |
+|---|---|---|---|---|
+| 1 | black | 2 | GND | Ground |
+| 2 | red | 3 | 5 V | Powers the whole board |
+| 3 | white | 4 | TX from the heat pump (5 V logic) | Goes through R2/R3 (10k/15k), which divides 5 V to 3.0 V, then into ESP IO7 (UART RX) |
+| 4 | yellow | 5 | RX into the heat pump | Driven by U3, a 74AHCT1G125 buffer powered from 5 V, so the heat pump gets a real 5 V signal. U3's input is ESP IO6 (UART TX). R6 holds that line high while the ESP is still booting so the heat pump never sees garbage. |
 
-TX and RX cross on the board, as on any UART link: the heat pump's TX feeds the ESP's RX and the
-other way round. The JST cable is wired straight through. Verify this pinout on **your** unit with
-a meter before plugging anything in. Pin numbering on the header follows the JST drawing; the
-silkscreen marks pin 1.
+The cable is wired straight through, pin for pin; the UART crossover (heat pump TX into ESP RX
+and back) is built into the numbering. Grove pin 1 is at the end marked "1" on the silkscreen,
+the left end when you look into the socket opening from the board edge with the latch window up.
+CN105 pin 1 (12 V) stays unconnected in the cable. Verify the CN105 pinout on **your** unit with a
+meter before plugging anything in.
 
 **ESP32-C6 module.** U1 (ESP32-C6-WROOM-1-N8, 8 MB flash) with its decoupling C4 (22 µF) and C5
 (100 nF) at the 3V3 pin, the EN reset circuit (R1, C1, button RESET), the BOOT button on IO9, and
@@ -107,12 +110,12 @@ over the top edge. No copper, tracks, vias or parts under it on either layer, an
 for no metal, including the enclosure, within about 15 mm of that end.
 
 **Placement rules that matter.** C5 and C6 (100 nF) stay tight against the module 3V3 pin and
-U3's VCC pin; C2/C3 at U2; C1, C4 and C7 are relaxed. D3 goes next to the CN105 header with a
+U3's VCC pin; C2/C3 at U2; C1, C4 and C7 are relaxed. D3 goes next to the Grove socket with a
 short ground return. D1 and R10 can sit anywhere on their nets. The USB D+/D- pair runs side by
 side; a via or two and a few millimetres of length mismatch are fine at USB full speed. Both
-connectors are placed so their openings are flush with the bottom board edge: the CN105 footprint
-origin is pin 1 and its housing face is 7.2 mm from the pin row, the USB-C origin is the shell
-centre and the shell front is 3.65 mm from it.
+connectors are placed so their openings are flush with the bottom board edge: the Grove footprint
+origin is the centre of its pin row and the housing front is 9.3 mm from it (anchor pads stop at
+9.0 mm so they keep the 0.3 mm copper-to-edge clearance with a flush face), the USB-C origin is the shell centre and the shell front is 3.65 mm from it.
 
 **Checks.** `Inspect → Design Rules Checker` with schematic parity on. Expect 0 errors, 0
 unconnected, and six `silk_edge_clearance` warnings where the connector and antenna outlines cross
@@ -142,9 +145,9 @@ Needs KiCad in /Applications. It writes `production/` (git-ignored): `cn105-gerb
 for F.Cu, B.Cu, both masks, both silkscreens, F.Paste, Edge.Cuts, plus Excellon PTH/NPTH drills),
 `cn105-bom-jlcpcb.csv` and `cn105-cpl-jlcpcb.csv` in JLC's column format, built from the `LCSC`
 field on every part. The BOM's Comment column is the LCSC code, so JLC's matcher cannot confuse a
-part with a similarly named one. Mounting holes are skipped. Through-hole parts (CN105) are
-reported at the centre of their pin pattern, which is what JLC's preview expects; KiCad's own
-position export would put them on pin 1 and the preview would draw the body shifted.
+part with a similarly named one. Mounting holes are skipped. Through-hole parts are reported at the
+centre of their pin pattern, which is what JLC's preview expects (the 0.2.0 CN105 header needed
+this; the Grove socket is SMD).
 
 ```bash
 python3 tools/jlc_stock.py production/cn105-bom-jlcpcb.csv
@@ -202,7 +205,7 @@ heat-pump UART. The WROOM-1-N8 module has 8 MB flash, hence `flash_size: 8MB`.
 1. Power from USB only. Measure +3V3 on C3: expect 3.25–3.35 V. The module should enumerate as a
    USB serial/JTAG device on the Mac (`ls /dev/cu.usb*`).
 2. Flash. PWR LED lights, Wi-Fi joins.
-3. Measure CN105 pin 5 relative to pin 2: ~5 V (USB-powered it'll read ~4.6 V). That's UART idle.
+3. Measure Grove pin 4 relative to pin 1: ~5 V (USB-powered it'll read ~4.6 V). That's UART idle.
 4. Only now plug into the heat pump. Confirm pin 3 is 5 V and pin 2 is ground **with the cable
    unplugged from the board** first, meter on the heat pump side.
 5. **Do not have USB and the heat pump connected at the same time** unless the USB host is
@@ -213,9 +216,12 @@ heat-pump UART. The WROOM-1-N8 module has 8 MB flash, hence `flash_size: 8MB`.
 ## Things I assumed that you should double-check
 
 - CN105 pin order (12V, GND, 5V, TX, RX) and which end is pin 1 on your unit's socket.
-- The JST PA footprint was drawn from the JST ePA-F drawing (0.7 mm holes, 2.0 mm pitch, 1.1 mm
-  boss holes). I could not confirm which face of the housing has the latch window; it only
-  affects which way the cable's latch faces, not whether it fits.
+- The Grove socket footprint was drawn from the Megastar ZX-HY2.0-4PWT drawing. Pin 1 was taken
+  to be the left end with the opening toward you and the latch window up, the JST PH convention
+  the HY2.0 family copies and the numbering the Serin page uses (pin 1 = black GND). Before the
+  first power-up, confirm with a meter that the cable's black wire lands on the pad marked 1. A
+  mirrored cable would put the heat pump's 5 V on U3's output and GND on the divider, which the
+  parts tolerate briefly but is not the intent.
 - U3 must be an **AHCT** part. AHC or LVC in the same package will not translate 3.3 V → 5 V reliably.
 - The heat pump's 5 V pin can supply a few hundred mA on most units. C7 (100 µF on +5V near Q1)
   is there to ride through Wi-Fi transmit peaks; if you still see resets during Wi-Fi activity,

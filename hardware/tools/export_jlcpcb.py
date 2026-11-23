@@ -4,7 +4,9 @@ Run with KiCad's bundled Python, from the hardware/ folder:
   /Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/Current/bin/python3 tools/export_jlcpcb.py
 
 Every footprint with an LCSC field is included; mounting holes and DNP parts are skipped.
-Comment = MPN field if set, else Value. Coordinates are relative to the board's aux origin
+Comment = the LCSC code itself: JLC's matcher searches the Comment text and flags names that
+resemble other catalogue entries (TS-1187A-B-A-B vs TS-1187A-BAB) as ambiguous even when the
+LCSC column is right, and the code is the one string that matches exactly one part. Coordinates are relative to the board's aux origin
 (unset = page origin, which is what the Gerbers use), Y negated as in KiCad's own position files.
 """
 import collections, csv, os, re, sys
@@ -45,7 +47,7 @@ for fp in b.GetFootprints():
         for pd in pads[1:]:
             bb.Merge(pd.GetBoundingBox())
         p = bb.GetCenter()
-    rows.append(dict(ref=ref, comment=field(fp, "MPN") or str(fp.GetValue()), foot=str(fp.GetFPID().GetLibItemName()),
+    rows.append(dict(ref=ref, comment=lcsc, foot=str(fp.GetFPID().GetLibItemName()),
                      lcsc=lcsc, x=T(p.x - ao.x), y=-T(p.y - ao.y), rot=fp.GetOrientationDegrees(),
                      side="Top" if fp.GetLayer() == pcbnew.F_Cu else "Bottom"))
 rows.sort(key=lambda r: key(r["ref"]))

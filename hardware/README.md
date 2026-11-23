@@ -48,7 +48,7 @@ Verify this pinout on **your** unit with a meter before plugging anything in. Pi
 header follows the JST drawing; the "1" and the arrow on the silkscreen mark pin 1 (the top pin
 when the CN105 header is on your left).
 
-**ESP32-C6 module (top right).** U1 with its decoupling (C4, C5), the EN reset circuit (R1, C1, button RESET), the BOOT button (on IO9), and three 0805 status LEDs, all JLCPCB basic parts: green PWR (R7, IO23, net LED_PWR), red HEAT (R8, IO22, net LED_HEAT) and white COOL (R9, IO21 on module pin 27, net LED_COOL). The LEDs, buttons, USB-C and module print their Value (PWR, HEAT, COOL, RESET, BOOT, USB-C, ESP32-C6) on the silkscreen instead of their reference designator. UART1 is on IO6/IO7 for the
+**ESP32-C6 module (top right).** U1 with its decoupling (C4, C5), the EN reset circuit (R1, C1, button RESET), the BOOT button (on IO9), and three 0805 status LEDs: green PWR (R7, IO23, net LED_PWR), red HEAT (R8, IO22, net LED_HEAT) and blue COOL (R9, IO21 on module pin 27, net LED_COOL); green and red are JLCPCB basic parts, the blue is extended (JLC stocks no basic blue 0805). The LEDs, buttons, USB-C and module print their Value (PWR, HEAT, COOL, RESET, BOOT, USB-C, ESP32-C6) on the silkscreen instead of their reference designator. UART1 is on IO6/IO7 for the
 heat pump; UART0 is unused, so the console is the module's USB-Serial-JTAG over the USB-C port. Of
 the strapping pins, IO9 is the BOOT button and both IO9 and IO8 carry 10k pull-ups (R12, R11) so
 boot mode never depends on the weak internal pull-ups; the rest are left unconnected.
@@ -182,7 +182,8 @@ If you move something, keep courtyards (thin outlines) from overlapping and re-r
    It writes `production/` (git-ignored): `cn105-gerbers.zip` (Gerbers for F.Cu, B.Cu, both
    masks, both silkscreens, F.Paste, Edge.Cuts, plus Excellon PTH/NPTH drills),
    `cn105-bom-jlcpcb.csv` and `cn105-cpl-jlcpcb.csv` in JLC's column format, built from the
-   `LCSC` and `MPN` fields on every part. Mounting holes are skipped. Through-hole parts (CN105)
+   `LCSC` field on every part (the BOM's Comment column is the LCSC code too, so JLC's matcher
+   cannot confuse it with a similarly named part). Mounting holes are skipped. Through-hole parts (CN105)
    are reported at the centre of their pin pattern, which is what JLC's preview expects; KiCad's
    own position export would put them on pin 1 and the preview would draw the body shifted.
 2. jlcpcb.com → Order now → upload `cn105-gerbers.zip`. Defaults are right: 2 layers, 1.6 mm,
@@ -196,7 +197,7 @@ If you move something, keep courtyards (thin outlines) from overlapping and re-r
    keep-out strip at the top edge), U2/U3/U4 pin 1, Q1, D1 and D3 cathode bands, the three LEDs,
    the CN105 header opening at the left edge and the USB-C opening at the right edge. Fix any
    with the rotate buttons in the preview.
-5. Extended-part fee: U1, U2, U3, CN105 and USB-C1 are extended parts (about $3 each per order);
+5. Extended-part fee: U1, U2, U3, CN105, USB-C1 and the blue LED COOL1 are extended parts (about $3 each per order);
    U4 and D3 are "preferred" extended parts with no fee; everything else is basic.
 
 ## Firmware starting point (ESPHome)

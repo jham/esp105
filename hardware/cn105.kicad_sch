@@ -8653,7 +8653,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "6.8k"
+		(property "Value" "330"
 			(at 265.43 153.67 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -8697,7 +8697,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C23212"
+		(property "LCSC" "C23138"
 			(at 262.89 152.4 0)
 			(hide yes)
 			(show_name no)
@@ -8991,7 +8991,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "330"
+		(property "Value" "1k"
 			(at 265.43 123.19 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -9035,7 +9035,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C23138"
+		(property "LCSC" "C21190"
 			(at 262.89 121.92 0)
 			(hide yes)
 			(show_name no)
@@ -13076,7 +13076,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C34499"
+		(property "LCSC" "C2293"
 			(at 273.05 195.58 0)
 			(hide yes)
 			(show_name no)
@@ -13087,7 +13087,7 @@
 				)
 			)
 		)
-		(property "MPN" "KT-0805W"
+		(property "MPN" "KT-0805B"
 			(at 0 0 0)
 			(hide yes)
 			(show_name no)

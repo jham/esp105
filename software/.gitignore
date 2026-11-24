@@ -1,0 +1,6 @@
+# Real credentials; secrets.example.yaml is the template
+/secrets.yaml
+# ESPHome build output and caches
+/.esphome/
+# Local Python environment for the esphome CLI
+/.venv/

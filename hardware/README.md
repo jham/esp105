@@ -165,55 +165,17 @@ python3 tools/jlc_stock.py production/cn105-bom-jlcpcb.csv
 checks every line against JLCPCB's database and flags missing or out-of-stock parts, parts that
 force Standard assembly, and which extended parts carry a loading fee.
 
-## Firmware starting point (ESPHome)
+## Firmware
 
-Minimal config to prove the hardware. Check the CN105 component's README for its current option
-names; this is the shape, not gospel.
-
-```yaml
-esp32:
-  board: esp32-c6-devkitc-1
-  variant: esp32c6
-  flash_size: 8MB
-  framework:
-    type: esp-idf
-
-external_components:
-  - source: github://echavet/MitsubishiCN105ESPHome
-
-uart:
-  id: hp_uart
-  tx_pin: GPIO6
-  rx_pin: GPIO7
-  baud_rate: 2400
-  parity: EVEN
-
-climate:
-  - platform: cn105
-    name: "Mini-split"
-    uart_id: hp_uart
-
-output:
-  - platform: gpio
-    pin: GPIO23
-    id: led_pwr
-  - platform: gpio
-    pin: GPIO22
-    id: led_heat
-  - platform: gpio
-    pin: GPIO21
-    id: led_cool
-```
-
-Flash over USB-C the first time (hold BOOT, tap RESET, release BOOT, then upload). After that
-over the air. Leave the logger on its default (USB-Serial-JTAG) so nothing is printed on the
-heat-pump UART. The WROOM-1-N8 module has 8 MB flash, hence `flash_size: 8MB`.
+The ESPHome firmware lives in [`../software/`](../software/), with build and flashing steps. The
+pins it relies on: UART TX GPIO6 and RX GPIO7, LEDs PWR GPIO23 / HEAT GPIO22 / COOL GPIO21 (high is
+on), BOOT on GPIO9, console on the USB-C port.
 
 ## Bring-up checklist
 
 1. Power from USB only. Measure +3V3 on C3: expect 3.25–3.35 V. The module should enumerate as a
    USB serial/JTAG device on the Mac (`ls /dev/cu.usb*`).
-2. Flash. PWR LED lights, Wi-Fi joins.
+2. Flash the firmware from `software/`. The PWR LED blinks until Wi-Fi joins, then stays on.
 3. Measure Grove pin 4 relative to pin 1: ~5 V (USB-powered it'll read ~4.6 V). That's UART idle.
 4. Only now plug into the heat pump. Confirm pin 3 is 5 V and pin 2 is ground **with the cable
    unplugged from the board** first, meter on the heat pump side.

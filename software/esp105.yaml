@@ -1,0 +1,322 @@
+# ESPHome firmware for the esp105 CN105 adapter, board 0.3.0.
+# Copyright 2026 Jeff Hamilton. SPDX-License-Identifier: Apache-2.0
+#
+# Wiring this file assumes (see ../hardware/README.md):
+#   GPIO6  UART TX -> U3 buffer (5 V) -> Grove pin 4 -> heat pump RX (CN105 pin 5)
+#   GPIO7  UART RX <- R2/R3 divider   <- Grove pin 3 <- heat pump TX (CN105 pin 4)
+#   GPIO23 PWR LED (green), GPIO22 HEAT LED (red), GPIO21 COOL LED (blue); high = on
+#   GPIO9  BOOT button (10k pull-up, pressed = low); also the boot strapping pin
+#   Console: the module's USB-Serial-JTAG on the USB-C port (UART0 is unused)
+#
+# Copy secrets.example.yaml to secrets.yaml and fill it in before building.
+
+substitutions:
+  name: esp105
+  friendly_name: ESP105
+  board_version: "0.3.0"
+  firmware_version: "0.1.0"
+  # Brightness of HEAT/COOL when the unit is in that mode but not running (0-1, gamma corrected)
+  led_dim: "0.3"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  comment: "Mitsubishi CN105 adapter, board ${board_version}"
+  min_version: 2025.11.0
+  project:
+    name: esp105.cn105-adapter
+    version: ${firmware_version}
+  on_boot:
+    priority: -100
+    then:
+      - script.execute: update_leds
+
+esp32:
+  board: esp32-c6-devkitc-1
+  variant: esp32c6
+  flash_size: 8MB
+  framework:
+    type: esp-idf
+
+# Logs go to the USB-C port; nothing is printed on the heat pump UART.
+logger:
+  level: INFO
+  hardware_uart: USB_SERIAL_JTAG
+  logs:
+    CN105: INFO
+    CN105_CONN: INFO
+    CN105Climate: WARN
+    climate: WARN
+    sensor: WARN
+    READ: WARN
+    WRITE: WARN
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  # Encrypted with the API key above; no separate OTA password.
+  - platform: esphome
+    encryption:
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  on_connect:
+    - script.execute: update_leds
+  on_disconnect:
+    - script.execute: update_leds
+  # Falls back to its own access point if the network is unreachable
+  ap:
+    ssid: "${friendly_name} Fallback"
+    password: !secret fallback_ap_password
+
+captive_portal:
+
+# Local web page with the climate controls, for use without Home Assistant
+web_server:
+  port: 80
+  version: 3
+  ota: false            # firmware uploads only through the encrypted OTA above
+  auth:
+    type: digest
+    username: admin
+    password: !secret web_password
+
+external_components:
+  # Pinned to a release so builds are reproducible; bump deliberately.
+  - source: github://echavet/MitsubishiCN105ESPHome@2026.11.1
+    components: [cn105]
+
+uart:
+  id: hp_uart
+  tx_pin: GPIO6
+  rx_pin: GPIO7
+  baud_rate: 2400
+  data_bits: 8
+  parity: EVEN
+  stop_bits: 1
+
+climate:
+  - platform: cn105
+    id: hp
+    name: Heat pump
+    uart_id: hp_uart
+    icon: mdi:heat-pump
+    update_interval: 2s
+    # Gives a log client time to attach before the first handshake after boot
+    connection_bootstrap_delay: 10s
+    remote_temperature_timeout: 30min
+    visual:
+      min_temperature: 16
+      max_temperature: 31
+      temperature_step:
+        target_temperature: 1
+        current_temperature: 0.5
+    supports:
+      mode: [AUTO, COOL, HEAT, DRY, FAN_ONLY]
+      fan_mode: [AUTO, QUIET, LOW, MEDIUM, HIGH]
+      swing_mode: ["OFF", VERTICAL]
+    # Not every indoor unit reports all of these; the uncommon ones start disabled in Home Assistant.
+    vertical_vane_select:
+      name: Vertical vane
+    horizontal_vane_select:
+      name: Horizontal vane
+      disabled_by_default: true
+    compressor_frequency_sensor:
+      name: Compressor frequency
+      entity_category: diagnostic
+      disabled_by_default: true
+    outside_air_temperature_sensor:
+      name: Outside air temperature
+      disabled_by_default: true
+    input_power_sensor:
+      name: Input power
+      disabled_by_default: true
+    kwh_sensor:
+      name: Energy
+      disabled_by_default: true
+    isee_sensor:
+      name: i-see sensor
+      disabled_by_default: true
+    stage_sensor:
+      name: Stage
+      entity_category: diagnostic
+      disabled_by_default: true
+    runtime_hours_sensor:
+      name: Runtime hours
+      entity_category: diagnostic
+      disabled_by_default: true
+    on_state:
+      - script.execute: update_leds
+
+# --- Status LEDs --------------------------------------------------------------
+# PWR:  on when Wi-Fi is connected, blinking while it is not.
+# HEAT: full while heating, dim when in HEAT mode but idle.
+# COOL: full while cooling or drying, dim when in COOL/DRY mode but idle.
+# In AUTO, HEAT and COOL follow what the unit is doing; both dim when it is idle.
+# The "Status LEDs" switch (or a short press of BOOT) turns them all off, e.g. at night.
+
+output:
+  - platform: ledc
+    id: led_pwr_out
+    pin: GPIO23
+  - platform: ledc
+    id: led_heat_out
+    pin: GPIO22
+  - platform: ledc
+    id: led_cool_out
+    pin: GPIO21
+
+light:
+  - platform: monochromatic
+    id: led_pwr
+    name: PWR LED
+    internal: true
+    output: led_pwr_out
+    default_transition_length: 0s
+    restore_mode: ALWAYS_OFF
+    effects:
+      - pulse:
+          name: Blink
+          transition_length: 0s
+          update_interval: 500ms
+  - platform: monochromatic
+    id: led_heat
+    name: HEAT LED
+    internal: true
+    output: led_heat_out
+    default_transition_length: 0s
+    restore_mode: ALWAYS_OFF
+  - platform: monochromatic
+    id: led_cool
+    name: COOL LED
+    internal: true
+    output: led_cool_out
+    default_transition_length: 0s
+    restore_mode: ALWAYS_OFF
+
+switch:
+  - platform: template
+    id: leds_enabled
+    name: Status LEDs
+    icon: mdi:led-on
+    entity_category: config
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_ON
+    on_turn_on:
+      - script.execute: update_leds
+    on_turn_off:
+      - script.execute: update_leds
+
+binary_sensor:
+  # BOOT button: a short press toggles the status LEDs. Holding it through a reset still
+  # enters the ROM download mode, as on any ESP32.
+  - platform: gpio
+    id: boot_button
+    name: BOOT button
+    internal: true
+    pin:
+      number: GPIO9
+      inverted: true
+      ignore_strapping_warning: true
+      mode:
+        input: true   # R12 on the board is the pull-up
+    filters:
+      - delayed_on_off: 20ms
+    on_click:
+      min_length: 50ms
+      max_length: 1s
+      then:
+        - switch.toggle: leds_enabled
+
+script:
+  - id: update_leds
+    mode: restart
+    then:
+      - lambda: |-
+          auto set = [](light::LightState *led, float brightness, const char *effect) {
+            if (brightness <= 0.0f) {
+              led->turn_off().perform();
+              return;
+            }
+            auto call = led->turn_on();
+            call.set_brightness(brightness);
+            call.set_effect(effect);
+            call.perform();
+          };
+
+          if (!id(leds_enabled).state) {
+            set(id(led_pwr), 0.0f, "None");
+            set(id(led_heat), 0.0f, "None");
+            set(id(led_cool), 0.0f, "None");
+            return;
+          }
+
+          if (wifi::global_wifi_component->is_connected()) {
+            set(id(led_pwr), 1.0f, "None");
+          } else {
+            set(id(led_pwr), 1.0f, "Blink");
+          }
+
+          const float dim = ${led_dim};
+          float heat = 0.0f, cool = 0.0f;
+          switch (id(hp).action) {
+            case climate::CLIMATE_ACTION_HEATING:
+              heat = 1.0f;
+              break;
+            case climate::CLIMATE_ACTION_COOLING:
+            case climate::CLIMATE_ACTION_DRYING:
+              cool = 1.0f;
+              break;
+            default:
+              break;
+          }
+          switch (id(hp).mode) {
+            case climate::CLIMATE_MODE_HEAT:
+              if (heat == 0.0f) heat = dim;
+              break;
+            case climate::CLIMATE_MODE_COOL:
+            case climate::CLIMATE_MODE_DRY:
+              if (cool == 0.0f) cool = dim;
+              break;
+            case climate::CLIMATE_MODE_AUTO:
+            case climate::CLIMATE_MODE_HEAT_COOL:
+              if (heat == 0.0f && cool == 0.0f) heat = cool = dim;
+              break;
+            default:
+              break;
+          }
+          set(id(led_heat), heat, "None");
+          set(id(led_cool), cool, "None");
+
+# --- Diagnostics ----------------------------------------------------------------
+
+sensor:
+  - platform: wifi_signal
+    name: Wi-Fi signal
+    update_interval: 60s
+    entity_category: diagnostic
+  - platform: uptime
+    name: Uptime
+    entity_category: diagnostic
+  - platform: internal_temperature
+    name: Module temperature
+    entity_category: diagnostic
+
+text_sensor:
+  - platform: version
+    name: ESPHome version
+    hide_timestamp: true
+    entity_category: diagnostic
+  - platform: wifi_info
+    ip_address:
+      name: IP address
+      entity_category: diagnostic
+
+button:
+  - platform: restart
+    name: Restart
+  - platform: safe_mode
+    name: Restart in safe mode

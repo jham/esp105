@@ -207,6 +207,13 @@ needed for 0.3.0 to work.
   NanoC6 uses would conduct on our 5 V signals. A dual TVS in SOT-23 covers both lines;
   capacitance does not matter at 2400 baud. Pin 3 already has some protection from R2 (10k in
   series), so pin 4 is the one that benefits.
+- **UART0 header**: TXD0 (module pad 25, GPIO16), RXD0 (pad 24, GPIO17) and GND on an
+  unpopulated 3-pin 2.54 mm header footprint (KiCad `PinHeader_1x03_P2.54mm_Vertical`, marked DNP
+  so JLCPCB leaves it empty). Today those module pads are unconnected and the only console is the USB-C port. The pads
+  give a second way in with a 3.3 V USB-serial adapter: the ROM boot messages, and serial flashing
+  with BOOT held, still work if firmware breaks USB-Serial-JTAG or the USB-C connector is
+  damaged. They do not get around the ground warning in step 6 of the bring-up checklist, since a
+  USB-serial adapter ties the grounds together just as USB-C does.
 
 ## Things I assumed that you should double-check
 

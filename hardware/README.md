@@ -177,9 +177,18 @@ on), BOOT on GPIO9, console on the USB-C port.
    USB serial/JTAG device on the Mac (`ls /dev/cu.usb*`).
 2. Flash the firmware from `software/`. The PWR LED blinks until Wi-Fi joins, then stays on.
 3. Measure Grove pin 4 relative to pin 1: ~5 V (USB-powered it'll read ~4.6 V). That's UART idle.
-4. Only now plug into the heat pump. Confirm pin 3 is 5 V and pin 2 is ground **with the cable
+4. Check the cable's orientation. Unplug USB, plug the Serin cable into the board's Grove socket
+   with its CN105 end loose, and use the meter's continuity mode, poking a probe (or a bit of wire)
+   into the cavities of the CN105 plug. Cavity 1 (the ▲ end) is empty.
+   - Cavity 2 (black) beeps to the USB-C shell, which is GND.
+   - Cavity 3 (red) beeps to Q1 pin 3, the lone pin on one side of the SOT-23 (the `5V_CN105`
+     net), and does **not** beep to the USB-C shell.
+
+   If black does not reach GND, the socket's pin 1 is mirrored relative to the cable; do not
+   connect it to the heat pump (see the Grove note under "Things I assumed").
+5. Only now plug into the heat pump. Confirm pin 3 is 5 V and pin 2 is ground **with the cable
    unplugged from the board** first, meter on the heat pump side.
-5. **Do not have USB and the heat pump connected at the same time** unless the USB host is
+6. **Do not have USB and the heat pump connected at the same time** unless the USB host is
    battery powered or you use a USB isolator. USB ties the heat pump's control ground to the
    PC's earth through this board, and the two are not guaranteed to agree. Flash on the bench,
    then install; use OTA afterwards.
@@ -189,10 +198,12 @@ on), BOOT on GPIO9, console on the USB-C port.
 - CN105 pin order (12V, GND, 5V, TX, RX) and which end is pin 1 on your unit's socket.
 - The Grove socket footprint was drawn from the Megastar ZX-HY2.0-4PWT drawing. Pin 1 was taken
   to be the left end with the opening toward you and the latch window up, the JST PH convention
-  the HY2.0 family copies and the numbering the Serin page uses (pin 1 = black GND). Before the
-  first power-up, confirm with a meter that the cable's black wire lands on the pad marked 1. A
-  mirrored cable would put the heat pump's 5 V on U3's output and GND on the divider, which the
-  parts tolerate briefly but is not the intent.
+  the HY2.0 family copies and the numbering the Serin page uses (pin 1 = black GND). M5Stack's
+  NanoC6 schematic numbers the same socket the other way (GND = pin 4), and Megastar's drawing
+  numbers no pins at all, so this is unconfirmed until bring-up step 4 passes. If it is mirrored,
+  the heat pump's GND lands on U3's output, its 5 V on the R2/R3 divider, its TX on the
+  `5V_CN105` input and its RX on GND: the board gets no power and nothing works. The fix is a
+  cable with the Grove end re-pinned in reverse order, not a new board.
 - U3 must be an **AHCT** part. AHC or LVC in the same package will not translate 3.3 V → 5 V reliably.
 - The heat pump's 5 V pin can supply a few hundred mA on most units. C7 (100 µF on +5V near Q1)
   is there to ride through Wi-Fi transmit peaks; if you still see resets during Wi-Fi activity,

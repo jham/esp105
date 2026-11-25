@@ -193,6 +193,21 @@ on), BOOT on GPIO9, console on the USB-C port.
    PC's earth through this board, and the two are not guaranteed to agree. Flash on the bench,
    then install; use OTA afterwards.
 
+## Next board version
+
+Changes worth making the next time the board is revised for another reason. None of them is
+needed for 0.3.0 to work.
+
+- **100 Ω series resistor on U3's output**, between U3 pin 4 and Grove pin 4 (`CN105_RX_5V`).
+  U3's output currently goes straight to the socket, and the 74AHCT1G125 is only rated for about
+  2 kV human-body ESD. The resistor limits current into U3 from a static discharge, a short or a
+  miswired cable, and costs nothing at 2400 baud. 0603, JLCPCB basic part.
+- **5 V TVS pair on the two Grove data pins** (pins 3 and 4), right at the socket, sharing D3's
+  short ground return. It must be a 5 V working-voltage part: the 3.3 V diodes the M5Stack
+  NanoC6 uses would conduct on our 5 V signals. A dual TVS in SOT-23 covers both lines;
+  capacitance does not matter at 2400 baud. Pin 3 already has some protection from R2 (10k in
+  series), so pin 4 is the one that benefits.
+
 ## Things I assumed that you should double-check
 
 - CN105 pin order (12V, GND, 5V, TX, RX) and which end is pin 1 on your unit's socket.

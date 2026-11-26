@@ -61,6 +61,7 @@ ERC passes with 0 errors and 0 warnings. Commit these together with the layout i
   - OTA
   - the web UI
 - Check whether Wi-Fi transmit peaks reset the board when it runs from the heat pump's 5 V. C7 is there to prevent that.
+- Try the Matter-over-Thread firmware in `software/matter/` on a board: commissioning, Thread attach, then the heat pump link. Its README lists what is untested ("Not done yet").
 
 ## 5. Later / optional
 

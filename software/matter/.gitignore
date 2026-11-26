@@ -1,0 +1,8 @@
+# ESP-IDF build output and generated config (sdkconfig.defaults is the source)
+/build/
+/sdkconfig
+/sdkconfig.old
+# Downloaded by the component manager; dependencies.lock pins the versions
+/managed_components/
+# Editor (clangd) index
+/.cache/

@@ -3,7 +3,8 @@
 ESPHome firmware for the esp105 board, version 0.3.0 (the Grove-socket board). It talks to the
 heat pump through the [MitsubishiCN105ESPHome](https://github.com/echavet/MitsubishiCN105ESPHome)
 component and shows up in Home Assistant as a climate entity, with a password-protected local web
-page for use without Home Assistant.
+page for use without Home Assistant. For Thread and other Matter controllers, use the firmware in
+[`../matter/`](../matter/) instead.
 
 Run the commands on this page from this folder, `software/wifi/`.
 
@@ -73,6 +74,13 @@ python3 -m venv .venv
 
    Choose the USB serial port when asked. The ESP32-C6 enters download mode by itself over USB. If
    the upload cannot connect, hold BOOT, tap RESET, release BOOT and try again.
+
+   If the board last ran the Matter firmware, erase the flash before this step, so none of its
+   settings or Thread credentials are left behind:
+
+   ```bash
+   .venv/bin/esptool --chip esp32c6 erase-flash
+   ```
 5. Watch the log until the PWR LED goes solid and the log shows Wi-Fi connected. The heat pump
    handshake will time out on the bench; that is expected without a heat pump.
 6. Unplug USB, connect the Grove cable to the heat pump, and Home Assistant should discover the
@@ -109,8 +117,8 @@ Assistant stops sending values.
 
 ## Thread
 
-The ESP32-C6 also speaks Thread, and the CN105 component reports working over Thread on another
-C6 board. This configuration uses Wi-Fi only for now.
+This configuration uses Wi-Fi only. For Thread, use the Matter firmware in
+[`../matter/`](../matter/).
 
 ## Troubleshooting
 

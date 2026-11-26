@@ -8,7 +8,7 @@ talks to it over its serial port with an ESP32-C6 (Wi-Fi or Thread).
 | Folder | Contents |
 |---|---|
 | [`hardware/`](hardware/) | KiCad 10 project: schematic, routed 2-layer PCB, project libraries, BOM with verified LCSC numbers, and the guide for working on it. Start with [hardware/README.md](hardware/README.md). |
-| [`software/`](software/) | ESPHome firmware for the board, in `software/wifi/`: Home Assistant climate entity over Wi-Fi, status LEDs, build and flashing steps. Start with [software/README.md](software/README.md). |
+| [`software/`](software/) | Firmware for the board, two choices: ESPHome over Wi-Fi for Home Assistant, or Matter over Thread for any Matter controller. Build and flashing steps are in `software/wifi/` and `software/matter/`. Start with [software/README.md](software/README.md). |
 
 Open the board in KiCad via `hardware/cn105.kicad_pro`.
 

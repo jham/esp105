@@ -24,4 +24,8 @@ C2 C3,2,10uF,0603,,C19702,LDO input / output
 C4,1,22uF,0805,,C45783,Module bulk decoupling (close to U1 pin 2, 3V3)
 C5 C6,2,100nF,0603,YAGEO CC0603KRX7R9BB104,C14663,Module and buffer decoupling. JLCPCB basic part
 C7,1,100uF,1206,Samsung CL31A107MQHNNNE,C15008,Bulk 5 V reservoir for Wi-Fi bursts; near Q1. JLCPCB basic part
+R13,1,100,0603,UNI-ROYAL 0603WAF1000T5E,C22775,"In series between U3's output and Grove pin 4 (CN105_RX_5V); limits ESD or short-circuit current into U3. Added after 0.3.0. JLCPCB basic part"
+D4,1,ESD5V0AP,SOT-23,ElecSuper ESD5V0AP,C5199224,"Dual 5 V TVS, common anode (pin 3 to GND), on Grove pins 3 and 4. Place at the Grove socket. Added after 0.3.0. JLCPCB extended part"
+F1,1,0.75A PPTC,0805,BHFUSE BSMD0805-075-6V,C883110,"Resettable fuse, 6 V, 0.75 A hold / 1.5 A trip, between the USB-C VBUS pins (5V_USB_IN) and 5V_USB. Added after 0.3.0. JLCPCB extended part"
+J1,1,UART0 header (not fitted),1x03 2.54 mm,,,"DNP: 1 TXD0 (GPIO16), 2 RXD0 (GPIO17), 3 GND, for a 3.3 V USB-serial adapter. Added after 0.3.0. No part to buy"
 H1 H2 H3 H4,4,M2.5 mounting hole,2.7 mm,,,No part to buy

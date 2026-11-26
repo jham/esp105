@@ -3,9 +3,10 @@
 A small board that plugs into the CN105 port of a Mitsubishi mini-split, is powered by it, and talks
 to it over its 5 V serial port using an ESP32-C6 module (Wi-Fi or Thread, chosen in firmware).
 
-**Design state:** schematic and board complete at version 0.3.0 (see the title block, the
-`ESP105 v…` silkscreen, and [ORDER_LOG.md](ORDER_LOG.md) for what has been built). ERC 0, DRC 0
-errors, schematic parity 0. Board 41.8 × 37.6 mm, 2 layers, ESP32-C6-WROOM-1-N8 with its antenna
+**Design state:** schematic and board complete at version 0.4.0, not yet ordered (see the title
+block, the `ESP105 v…` silkscreen, and [ORDER_LOG.md](ORDER_LOG.md) for what has been built; the
+latest boards made are 0.3.0). What changed since 0.3.0 is under
+[Changes from 0.3.0 to 0.4.0](#changes-from-030-to-040). ERC 0, DRC 0 errors, schematic parity 0. Board 41.8 × 37.6 mm, 2 layers, ESP32-C6-WROOM-1-N8 with its antenna
 overhanging the top edge, Grove socket for the CN105 cable and USB-C both on the bottom edge, four M2.5 holes. The
 LCSC numbers in the BOM were checked against JLCPCB's parts database. Board versions are semver;
 the git tag is `v<version>` (the early tags `v0.1` and `v0.2` mean 0.1.0 and 0.2.0).
@@ -39,9 +40,10 @@ end, Grove HY2.0-4P on ours, four conductors, the 12 V position left empty.
 | 1 | black | 2 | GND | Ground |
 | 2 | red | 3 | 5 V | Powers the whole board |
 | 3 | white | 4 | TX from the heat pump (5 V logic) | Goes through R2/R3 (10k/15k), which divides 5 V to 3.0 V, then into ESP IO7 (UART RX) |
-| 4 | yellow | 5 | RX into the heat pump | Driven by U3, a 74AHCT1G125 buffer powered from 5 V, so the heat pump gets a real 5 V signal. U3's input is ESP IO6 (UART TX). R6 holds that line high while the ESP is still booting so the heat pump never sees garbage. |
+| 4 | yellow | 5 | RX into the heat pump | Driven by U3, a 74AHCT1G125 buffer powered from 5 V, through R13 (100 Ω), so the heat pump gets a real 5 V signal. U3's input is ESP IO6 (UART TX). R6 holds that line high while the ESP is still booting so the heat pump never sees garbage. |
 
-The cable is wired straight through, pin for pin; the UART crossover (heat pump TX into ESP RX
+D4, a dual TVS diode at the socket, clamps ESD on pins 3 and 4. The cable is wired straight
+through, pin for pin; the UART crossover (heat pump TX into ESP RX
 and back) is built into the numbering. Grove pin 1 is at the end marked "1" on the silkscreen,
 the left end when you look into the socket opening from the board edge with the latch window up.
 CN105 pin 1 (12 V) stays unconnected in the cable. Verify the CN105 pinout on **your** unit with a
@@ -53,7 +55,8 @@ three 0805 status LEDs: green PWR (R7 1k, IO23, net LED_PWR), red HEAT (R8 330 �
 LED_HEAT) and blue COOL (R9 330 Ω, IO21, net LED_COOL). The resistor values give the three LEDs
 similar brightness at 3.3 V (green about 50 mcd, red and blue 25–30 mcd); green and red are JLCPCB
 basic parts, the blue is extended because JLCPCB stocks no basic blue 0805. UART1 is on IO6/IO7 for
-the heat pump; UART0 is unused, so the console is the module's USB-Serial-JTAG over the USB-C port.
+the heat pump. UART0 goes to J1, a 3-pin header on the back that is not fitted (TX, RX, GND, for a
+3.3 V USB-serial adapter); the console is the module's USB-Serial-JTAG over the USB-C port.
 Of the strapping pins, IO9 is the BOOT button and both IO9 and IO8 carry 10k pull-ups (R12, R11) so
 boot mode never depends on the weak internal pull-ups; the rest are left unconnected. The LEDs,
 buttons, USB-C and module print their Value (PWR, HEAT, COOL, RESET, BOOT, USBC, ESP32-C6) on the
@@ -64,9 +67,9 @@ pads 14/13), so no USB-UART chip is needed. The receptacle's two D+ pads and two
 bridged on the board, as the USB-C spec requires. R4/R5 (5.1k) on CC1/CC2 tell a USB-C charger or
 laptop we want 5 V. U4 (SRV05-4, a 4-channel TVS array with pins 1+6 and 3+4 paired on the board)
 clamps ESD on D+, D- and VBUS, since the port lives in a damp metal box and gets plugged into by
-hand.
+hand. The VBUS pins are net `5V_USB_IN`; F1, a resettable fuse, feeds `5V_USB` from it.
 
-**Power.** Two 5 V sources feed the `+5V` rail. USB comes in through D1, a Schottky. The heat
+**Power.** Two 5 V sources feed the `+5V` rail. USB comes in through F1 and then D1, a Schottky. The heat
 pump's 5 V comes in through Q1, a P-channel MOSFET: with no USB present R10 holds its gate low and
 it conducts with about 30 mV of drop; plugging in USB pulls the gate high through the `5V_USB`
 line and switches it off, so USB can never back-feed the heat pump and the heat pump never drives
@@ -102,8 +105,8 @@ from it.
 
 **Rules already set** (File → Board Setup): 0.2 mm clearance, 0.15 mm minimum track, 0.5 mm vias
 with 0.3 mm holes, matching JLCPCB's cheap 2-layer process. Net class `Power` covers `+5V`,
-`+3V3`, `GND`, `5V_USB` and `5V_CN105` and makes those tracks 0.5 mm automatically; everything
-else is 0.25 mm.
+`+3V3`, `GND`, `5V_USB`, `5V_USB_IN` and `5V_CN105` and makes those tracks 0.5 mm
+automatically; everything else is 0.25 mm.
 
 **Antenna keep-out.** The 6 mm antenna section of the WROOM-1 (the end away from the pins) hangs
 over the top edge. No copper, tracks, vias or parts under it on either layer, and Espressif asks
@@ -127,7 +130,7 @@ socket and the USB-C both had this before 2026-11-23. Check a new footprint agai
 the origin, units of 10 mil) before trusting the placement preview.
 
 **Checks.** `Inspect → Design Rules Checker` with schematic parity on. Expect 0 errors, 0
-unconnected, and six `silk_edge_clearance` warnings where the connector and antenna outlines cross
+unconnected, and four `silk_edge_clearance` warnings where the connector and antenna outlines cross
 the board edge. A "thermal relief connection incomplete" error means a GND pad is boxed in by
 tracks: draw a short GND track from the pad to the nearest GND via. From the shell:
 
@@ -194,27 +197,55 @@ on), BOOT on GPIO9, console on the USB-C port.
    PC's earth through this board, and the two are not guaranteed to agree. Flash on the bench,
    then install; use OTA afterwards.
 
-## Next board version
+## Changes from 0.3.0 to 0.4.0
 
-Changes worth making the next time the board is revised for another reason. None of them is
-needed for 0.3.0 to work.
+0.4.0 is laid out and passes ERC, DRC and schematic parity, but it has not been ordered. The 0.3.0
+boards (tag `v0.3.0`) have none of these changes, and none of them is needed for 0.3.0 to work.
+The board outline, mounting holes, connectors, module position and design rules are unchanged.
 
-- **100 Ω series resistor on U3's output**, between U3 pin 4 and Grove pin 4 (`CN105_RX_5V`).
-  U3's output currently goes straight to the socket, and the 74AHCT1G125 is only rated for about
-  2 kV human-body ESD. The resistor limits current into U3 from a static discharge, a short or a
-  miswired cable, and costs nothing at 2400 baud. 0603, JLCPCB basic part.
-- **5 V TVS pair on the two Grove data pins** (pins 3 and 4), right at the socket, sharing D3's
-  short ground return. It must be a 5 V working-voltage part: the 3.3 V diodes the M5Stack
-  NanoC6 uses would conduct on our 5 V signals. A dual TVS in SOT-23 covers both lines;
-  capacitance does not matter at 2400 baud. Pin 3 already has some protection from R2 (10k in
-  series), so pin 4 is the one that benefits.
-- **UART0 header**: TXD0 (module pad 25, GPIO16), RXD0 (pad 24, GPIO17) and GND on an
-  unpopulated 3-pin 2.54 mm header footprint (KiCad `PinHeader_1x03_P2.54mm_Vertical`, marked DNP
-  so JLCPCB leaves it empty). Today those module pads are unconnected and the only console is the USB-C port. The pads
-  give a second way in with a 3.3 V USB-serial adapter: the ROM boot messages, and serial flashing
-  with BOOT held, still work if firmware breaks USB-Serial-JTAG or the USB-C connector is
-  damaged. They do not get around the ground warning in step 6 of the bring-up checklist, since a
+### Circuit
+
+- **R13, 100 Ω in series with U3's output** (0603, UNI-ROYAL 0603WAF1000T5E, LCSC C22775, JLCPCB
+  basic). U3 pin 4 is now net `CN105_RX_BUF`, and R13 joins it to `CN105_RX_5V` at Grove pin 4.
+  The 74AHCT1G125 is only rated for about 2 kV human-body ESD; R13 limits current into it from a
+  static discharge, a short or a miswired cable, and costs nothing at 2400 baud.
+- **D4, ESD5V0AP dual TVS on Grove pins 3 and 4** (SOT-23, ElecSuper ESD5V0AP, LCSC C5199224,
+  extended). Pins 1 and 2 go to `CN105_TX_5V` and `CN105_RX_5V`, pin 3 (the common anode) to GND.
+  5 V working voltage, 6 V breakdown, ±30 kV contact; the 3.3 V diodes the M5Stack NanoC6 uses
+  would conduct on our 5 V signals.
+- **J1, UART0 header, not fitted** (`PinHeader_1x03_P2.54mm_Vertical`, marked DNP so JLCPCB leaves
+  it empty): pin 1 TXD0 (module pad 25, GPIO16, net `UART0_TX`), pin 2 RXD0 (pad 24, GPIO17,
+  `UART0_RX`), pin 3 GND. With a 3.3 V USB-serial adapter it gives the ROM boot messages, and
+  serial flashing with BOOT held, if firmware breaks USB-Serial-JTAG or the USB-C connector is
+  damaged. It does not get around the ground warning in step 6 of the bring-up checklist, since a
   USB-serial adapter ties the grounds together just as USB-C does.
+- **F1, resettable fuse on USB VBUS** (0805, BHFUSE BSMD0805-075-6V, LCSC C883110, extended; 6 V,
+  0.75 A hold, 1.5 A trip). The USB-C VBUS pins and U4's VBUS clamp are now net `5V_USB_IN`
+  (renamed from `USBC_5V`, and in the `Power` net class), and F1 feeds `5V_USB` from it. It
+  protects the computer's USB port from a fault on this board, such as a solder bridge or a failed
+  TVS or capacitor; most USB hosts already limit current, so it is the least important of the
+  four. Its resistance (70–385 mΩ) adds up to about 0.1 V of drop at Wi-Fi peaks on top of D1,
+  which still leaves the AP2112K enough headroom.
+
+D4 and F1 are extended parts, each adding JLCPCB's extended-part loading fee to an order. The
+firmware needs no change: no ESP pin moved.
+
+### Layout
+
+- **New parts.** D4 sits about 3 mm from Grove pins 3 and 4, on the connector side of R2 and R13,
+  with a ground via about 1 mm from its ground pin. R13 is next to U3. F1 is on the bottom edge
+  between the USB-C and Grove sockets. J1 is on the back at the right edge, with TX, RX and GND
+  printed on the back silkscreen.
+- **Moved to make room.** U3 and C6 moved 2.5 mm right, and R2 and R3 moved next to D4. C7 (100 µF)
+  moved from beside U3 to beside U2 and Q1, where it holds up the regulator input during Wi-Fi
+  peaks. Q1, D1 and R10 shifted to fit around it. C2, C3, D3, R4, R5, R6, R11 and U2 moved by about a
+  millimetre or less.
+- **Routing.** USB power now runs from the VBUS pins on the bottom layer to F1, and U4's VBUS
+  clamp is on that side of the fuse. A bottom-layer track carries `+5V` across to U3 and C6. UART0
+  runs to J1 with two vias per signal. The board went from 179 track segments and 41 vias to 216
+  and 43; all power nets are still 0.5 mm.
+- **Silkscreen.** Every front label is now 0.8 mm high with a 0.1 mm stroke (most were 1.0 mm with
+  0.15 mm), except RESET and BOOT, which are 1.2 mm and bold.
 
 ## Things I assumed that you should double-check
 
@@ -228,7 +259,7 @@ needed for 0.3.0 to work.
   `5V_CN105` input and its RX on GND: the board gets no power and nothing works. The fix is a
   cable with the Grove end re-pinned in reverse order, not a new board.
 - U3 must be an **AHCT** part. AHC or LVC in the same package will not translate 3.3 V → 5 V reliably.
-- The heat pump's 5 V pin can supply a few hundred mA on most units. C7 (100 µF on +5V near Q1)
+- The heat pump's 5 V pin can supply a few hundred mA on most units. C7 (100 µF on +5V near Q1 and U2)
   is there to ride through Wi-Fi transmit peaks; if you still see resets during Wi-Fi activity,
   the supply is the suspect.
 - The CN105 5 V input has a TVS (D3, SMAJ5.0A) that clamps at about 9 V. It protects against a

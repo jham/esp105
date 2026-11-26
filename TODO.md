@@ -85,6 +85,7 @@ ERC passes with 0 errors and 0 warnings. Commit these together with the layout i
 
 ## Relocation notes
 
-- Claude's memory for this project is stored per folder path, at `~/.claude/projects/-Users-jham-Desktop-cn105/memory/`. After moving the repo, copy that folder to the new path's entry under `~/.claude/projects/` (the path with `/` replaced by `-`), or the next session starts without it.
+- On 2026-11-26 the repo moved from `~/Desktop/cn105` to `~/src/mitsubishi/esp105`. Sibling repos for related hardware go next to it.
+- Claude's memory for this project is stored per folder path. It now lives at the parent workspace's entry, `~/.claude/projects/-Users-jham-src-mitsubishi/memory/`, so start sessions in `~/src/mitsubishi` to pick it up.
 - `hardware/production/` (the order files) is git-ignored, so it won't come with a fresh clone. Regenerate it from a tag with `hardware/tools/export_jlcpcb.sh`.
 - Your PCB edits discarded on 2026-11-25 are backed up only in a temporary folder that will not survive: `/private/tmp/claude-502/-Users-jham-Desktop-cn105/8aeec4d0-c675-404b-9398-c04ec4bf28e0/scratchpad/pcb-backup-20261125-143736/` (the board file and a diff). Copy it somewhere if you want it.

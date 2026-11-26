@@ -4461,7 +4461,7 @@
 		)
 		(uuid "0ab1a9a1-8b89-4f88-886f-755e6f3dc9e0")
 	)
-	(text "CN105 (JST PA, 2.0 mm): 1 = 12 V (unused)   2 = GND   3 = 5 V   4 = TX from heat pump (5 V)   5 = RX into heat pump\nVerify this pinout on YOUR unit with a meter before plugging anything in.\nD3 clamps the 5 V pin at ~9 V if a cable ever puts 12 V on it."
+	(text "Grove socket (HY2.0-4P, 2.0 mm) for the Serin CN105-to-Grove cable:   1 = GND   2 = 5 V   3 = TX from heat pump (5 V)   4 = RX into heat pump\nCable's CN105 end (JST PAP-05V-S): 1 = 12 V (left empty)   2 = GND   3 = 5 V   4 = TX   5 = RX. Check the cable with a meter before plugging in.\nD3 clamps the 5 V pin at ~9 V if a miswired cable ever puts 12 V on it."
 		(exclude_from_sim no)
 		(at 38.1 50.8 0)
 		(effects
@@ -7762,7 +7762,7 @@
 				)
 			)
 		)
-		(property "Description" "5 V TVS on the CN105 5 V input: clamps a mis-wired cable (12 V on pin 3) before it reaches U2/U3"
+		(property "Description" "5 V TVS on the 5 V input (Grove pin 2): clamps a miswired cable (12 V on the 5 V wire) before it reaches U2/U3"
 			(at 31.75 86.36 0)
 			(hide yes)
 			(show_name no)

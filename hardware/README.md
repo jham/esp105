@@ -9,7 +9,8 @@ latest boards made are 0.3.0). What changed since 0.3.0 is under
 [Changes from 0.3.0 to 0.4.0](#changes-from-030-to-040). ERC 0, DRC 0 errors, schematic parity 0. Board 41.8 × 37.6 mm, 2 layers, ESP32-C6-WROOM-1-N8 with its antenna
 overhanging the top edge, Grove socket for the CN105 cable and USB-C both on the bottom edge, four M2.5 holes. The
 LCSC numbers in the BOM were checked against JLCPCB's parts database. Board versions are semver;
-the git tag is `v<version>` (the early tags `v0.1` and `v0.2` mean 0.1.0 and 0.2.0).
+the git tag is `v<version>` (the early tags `v0.1` and `v0.2` mean 0.1.0 and 0.2.0). A version is
+tagged when it is set, whether or not it has been ordered.
 
 ![Top of the board](cn105-board-3d.png)
 
@@ -142,10 +143,19 @@ tracks: draw a short GND track from the pad to the nearest GND via. From the she
 /Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli pcb drc --severity-all --schematic-parity --refill-zones cn105.kicad_pcb
 ```
 
-**Version and date.** Both title blocks hold the board version (semver) and date;
-`python3 tools/set_version.py 0.3.0` sets them with the editors closed, and the back silkscreen
-prints them through `${REVISION}` and `${ISSUE_DATE}`. The `/order` skill in `.claude/skills/order/`
-does this as part of placing an order and keeps `ORDER_LOG.md`.
+**Version and date.** Both title blocks hold the board version (semver) and the date it was
+set; `python3 tools/set_version.py 0.4.0` sets them with the schematic and PCB editors closed, and
+the back silkscreen prints them through `${REVISION}` and `${ISSUE_DATE}`. Setting a version and
+ordering boards are separate steps, each with a Claude Code skill in `.claude/skills/`:
+
+- `/bump-version` checks whether the design files changed since the last version tag, proposes
+  the next version (PATCH for part or export fixes with the schematic and copper unchanged, MINOR
+  for schematic or copper changes, MAJOR on request), sets the title blocks, adds a "Changes from
+  … to …" section below, runs the checks, commits and tags `v<version>`.
+- `/order` builds a tagged version. If the design changed since the last tag it runs
+  `/bump-version` first; if not, it orders the last tagged version again without a new number.
+  It then exports the order files, waits for you to place the order, logs it in `ORDER_LOG.md`
+  and pushes.
 
 ## Production files (JLCPCB)
 

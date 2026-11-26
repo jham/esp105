@@ -1,7 +1,9 @@
 # Order log
 
 One entry per board order, newest first. Board versions are semver; the git tag is `v<version>`
-(tags `v0.1` and `v0.2` predate the three-part numbering and mean 0.1.0 and 0.2.0). The order files
+(tags `v0.1` and `v0.2` predate the three-part numbering and mean 0.1.0 and 0.2.0). A version is
+tagged when it is set, so a version can appear here more than once (a repeat order) or not at all
+(never ordered); the README's "Changes from … to …" sections describe every version. The order files
 for any entry can be regenerated from its commit with `sh tools/export_jlcpcb.sh`. JLCPCB order
 numbers are deliberately not recorded here; this repository is public.
 

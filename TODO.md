@@ -1,10 +1,10 @@
 # To do
 
-Open work as of 2026-11-26. Board 0.3.0 (tag `v0.3.0`) is ordered and not yet received. Board 0.4.0 (R13, D4, F1, J1; see "Changes from 0.3.0 to 0.4.0" in `hardware/README.md`) is laid out and committed on `main` but not ordered or tagged.
+Open work as of 2026-11-26. Board 0.3.0 (tag `v0.3.0`) is ordered and not yet received. Board 0.4.0 (R13, D4, F1, J1; see "Changes from 0.3.0 to 0.4.0" in `hardware/README.md`) is laid out, committed and tagged `v0.4.0`, but not ordered.
 
 ## 1. Before the next order
 
-- **Version number:** the title blocks already say 0.4.0. Use the `/order` skill (`.claude/skills/order/SKILL.md`); it proposes 0.4.0 (a MINOR bump from `v0.3.0`) and tags `v0.4.0` once the order is placed.
+- **Version number:** 0.4.0 is set and tagged. Use the `/order` skill (`.claude/skills/order/SKILL.md`). It finds no design changes since `v0.4.0` and orders it as is. Any design change made before ordering (such as the rotation fix in `export_jlcpcb.py` below) makes it run `/bump-version` (`.claude/skills/bump-version/SKILL.md`) first, which would give 0.4.1.
 - **Rotations in the placement file:** JLCPCB's engineers had to correct 10 parts on the 0.3.0 order: Q1, U3, U4, PWR1, COOL1, HEAT1, C5, R6, BOOT1 and RESET1.
   - JLCPCB's zero rotation is 180° off from KiCad's for these packages:
     - SOT-23 (Q1)
@@ -50,7 +50,7 @@ Open work as of 2026-11-26. Board 0.3.0 (tag `v0.3.0`) is ordered and not yet re
 - Commit and push only when asked. Any PCB layout change gets a manual review in KiCad first.
 - You do the placement and routing; Claude edits only the schematic, BOM and docs.
 - Don't edit a KiCad file while its editor has it open. Check for lock files first: `find hardware -maxdepth 1 -name '*.lck'`.
-- Board versions are semver (tags `v<version>`), never "rev A/B".
+- Board versions are semver (tags `v<version>`), never "rev A/B". Setting a version (`/bump-version`, tags it) is separate from ordering (`/order`, which bumps first only if the design changed since the last tag).
 - Never write JLCPCB order numbers anywhere in this public repo.
 - Every power net name includes its voltage (`5V_USB_IN`, `5V_USB`, `5V_CN105`, `+5V`, `+3V3`), never a bare `VBUS`.
 - `software/wifi/secrets.yaml` is git-ignored and is never committed. The template is `secrets.example.yaml`.

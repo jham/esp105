@@ -54,7 +54,7 @@ ERC passes with 0 errors and 0 warnings. Commit these together with the layout i
 - Record what you find:
   - Doc-only notes that apply to the boards as built go on branch `release/v0.3.0` (from tag `v0.3.0`) and on `main`. Commit on `main`, then cherry-pick to the release branch. The branch can't be called `v0.3.0`, because that clashes with the tag.
   - Design fixes go on `main` only.
-- Flash `software/esp105.yaml` and check the firmware on real hardware:
+- Flash `software/wifi/esp105.yaml` and check the firmware on real hardware:
   - UART1 on GPIO6/7 at 2400 8E1
   - the PWR, HEAT and COOL LEDs
   - BOOT short-press toggling the LEDs
@@ -80,7 +80,7 @@ ERC passes with 0 errors and 0 warnings. Commit these together with the layout i
 - Board versions are semver (tags `v<version>`), never "rev A/B".
 - Never write JLCPCB order numbers anywhere in this public repo.
 - Every power net name includes its voltage (`USBC_5V`, `5V_USB`, `5V_CN105`, `+5V`, `+3V3`), never a bare `VBUS`.
-- `software/secrets.yaml` is git-ignored and is never committed. The template is `secrets.example.yaml`.
+- `software/wifi/secrets.yaml` is git-ignored and is never committed. The template is `secrets.example.yaml`.
 - Licenses: CERN-OHL-P-2.0 for hardware, Apache-2.0 for software.
 
 ## Relocation notes

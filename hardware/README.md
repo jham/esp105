@@ -167,7 +167,7 @@ force Standard assembly, and which extended parts carry a loading fee.
 
 ## Firmware
 
-The ESPHome firmware lives in [`../software/`](../software/), with build and flashing steps. The
+The ESPHome firmware lives in [`../software/wifi/`](../software/wifi/), with build and flashing steps. The
 pins it relies on: UART TX GPIO6 and RX GPIO7, LEDs PWR GPIO23 / HEAT GPIO22 / COOL GPIO21 (high is
 on), BOOT on GPIO9, console on the USB-C port.
 

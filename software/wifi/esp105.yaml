@@ -1,7 +1,7 @@
 # ESPHome firmware for the esp105 CN105 adapter, board 0.3.0.
 # Copyright 2026 Jeff Hamilton. SPDX-License-Identifier: Apache-2.0
 #
-# Wiring this file assumes (see ../hardware/README.md):
+# Wiring this file assumes (see ../../hardware/README.md):
 #   GPIO6  UART TX -> U3 buffer (5 V) -> Grove pin 4 -> heat pump RX (CN105 pin 5)
 #   GPIO7  UART RX <- R2/R3 divider   <- Grove pin 3 <- heat pump TX (CN105 pin 4)
 #   GPIO23 PWR LED (green), GPIO22 HEAT LED (red), GPIO21 COOL LED (blue); high = on

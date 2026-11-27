@@ -90,13 +90,13 @@ external_components:
     components: [cn105]
 
 uart:
-  id: hp_uart
-  tx_pin: GPIO6
-  rx_pin: GPIO7
-  baud_rate: 2400
-  data_bits: 8
-  parity: EVEN
-  stop_bits: 1
+  - id: hp_uart
+    tx_pin: GPIO6
+    rx_pin: GPIO7
+    baud_rate: 2400
+    data_bits: 8
+    parity: EVEN
+    stop_bits: 1
 
 climate:
   - platform: cn105

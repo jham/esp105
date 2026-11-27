@@ -1,0 +1,113 @@
+# Test build of the Wi-Fi firmware for an M5Stack NanoC6, with a simulated heat pump.
+# Copyright 2026 Jeff Hamilton. SPDX-License-Identifier: Apache-2.0
+#
+# Everything comes from esp105.yaml; this file only changes what differs on the NanoC6
+# and adds a fake indoor unit (components/cn105_sim) so the CN105 code has someone to talk to.
+#
+# NanoC6 differences (M5Stack schematic Sch_M5NanoC6_v0.0.1):
+#   - 4 MB of flash instead of 8 MB.
+#   - GPIO7 drives the blue LED, so the heat pump UART cannot use it for RX.
+#   - LEDs: blue on GPIO7, one WS2812 RGB LED on GPIO20 with its power switch on GPIO19.
+#   - Button on GPIO9 with a 10k pull-up, as on the esp105 board.
+#
+# The heat pump link is wired inside the chip, so nothing needs to be plugged in:
+#   CN105 component TX  GPIO1 -> simulator RX (same pin, routed through the GPIO matrix)
+#   simulator TX        GPIO2 -> CN105 component RX
+# GPIO1 and GPIO2 are the Grove port's signal pins. Leave the Grove port empty, and never
+# connect it to a real CN105 port: the NanoC6 has 3.3 V pins and no level shifting.
+
+substitutions:
+  name: esp105-nanoc6
+  friendly_name: ESP105 NanoC6
+
+packages:
+  esp105: !include esp105.yaml
+
+esp32:
+  flash_size: 4MB
+
+external_components:
+  - source:
+      type: local
+      path: components
+    components: [cn105_sim]
+
+logger:
+  logs:
+    cn105_sim: INFO
+
+uart:
+  - id: !extend hp_uart
+    tx_pin:
+      number: GPIO1
+      allow_other_uses: true
+    rx_pin:
+      number: GPIO2
+      allow_other_uses: true
+  - id: sim_uart
+    tx_pin:
+      number: GPIO2
+      allow_other_uses: true
+    rx_pin:
+      number: GPIO1
+      allow_other_uses: true
+    baud_rate: 2400
+    data_bits: 8
+    parity: EVEN
+    stop_bits: 1
+
+cn105_sim:
+  uart_id: sim_uart
+  room_temperature: 21
+  outside_temperature: 8
+
+# PWR moves to the blue LED. HEAT and COOL keep their esp105 pins, which go nowhere on the
+# NanoC6; the RGB LED below shows them instead.
+output:
+  - id: !extend led_pwr_out
+    pin: GPIO7
+
+switch:
+  - platform: gpio
+    id: rgb_led_power
+    pin: GPIO19
+    restore_mode: ALWAYS_ON
+    internal: true
+
+light:
+  - platform: esp32_rmt_led_strip
+    id: rgb_led
+    name: RGB LED
+    internal: true
+    pin: GPIO20
+    num_leds: 1
+    chipset: WS2812
+    rgb_order: GRB
+    default_transition_length: 0s
+    restore_mode: ALWAYS_OFF
+
+# Mirror HEAT (red) and COOL (blue) onto the RGB LED. Both dim at once (AUTO, idle) shows purple.
+interval:
+  - interval: 200ms
+    then:
+      - lambda: |-
+          auto level = [](light::LightState *led) -> float {
+            return led->current_values.is_on() ? led->current_values.get_brightness() : 0.0f;
+          };
+          const float heat = level(id(led_heat));
+          const float cool = level(id(led_cool));
+          static float last_heat = -1.0f, last_cool = -1.0f;
+          if (heat == last_heat && cool == last_cool) {
+            return;
+          }
+          last_heat = heat;
+          last_cool = cool;
+          if (heat <= 0.0f && cool <= 0.0f) {
+            id(rgb_led).turn_off().perform();
+            return;
+          }
+          const float peak = std::max(heat, cool);
+          auto call = id(rgb_led).turn_on();
+          call.set_brightness(peak * 0.5f);  // the WS2812 is much brighter than the board's LEDs
+          call.set_rgb(heat / peak, 0.0f, cool / peak);
+          call.perform();

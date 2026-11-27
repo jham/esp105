@@ -12,6 +12,8 @@ Run the commands on this page from this folder, `software/wifi/`.
 |---|---|
 | `esp105.yaml` | The device configuration. Pin map, heat pump settings, LEDs, button, diagnostics. |
 | `secrets.example.yaml` | Template for `secrets.yaml`, which holds the Wi-Fi credentials and keys and is git-ignored. |
+| `nanoc6.yaml` | Test build for an M5Stack NanoC6 with a simulated heat pump; see "Testing without a heat pump". |
+| `components/cn105_sim/` | The simulated heat pump used by `nanoc6.yaml`. |
 
 The configuration is pinned to ESPHome 2025.11 or later and to the CN105 component release
 2026.11.1. It validates and builds with ESPHome 2026.11.0.
@@ -91,6 +93,59 @@ Later updates go over the network:
 ```bash
 .venv/bin/esphome run esp105.yaml --device esp105.local
 ```
+
+## Testing without a heat pump
+
+`nanoc6.yaml` builds this firmware for an [M5Stack NanoC6](https://docs.m5stack.com/en/core/M5NanoC6),
+a small ESP32-C6 module, and adds a simulated indoor unit. Everything runs on the NanoC6 with
+nothing plugged in but USB, so you can try the whole Wi-Fi side and the CN105 code before a board
+or a heat pump is at hand.
+
+What differs from the esp105 build:
+
+| | esp105 board | NanoC6 test build |
+|---|---|---|
+| Flash | 8 MB | 4 MB |
+| Heat pump UART | GPIO6 / GPIO7 to the Grove socket | GPIO1 / GPIO2, looped inside the chip to the simulator |
+| PWR LED | Green, GPIO23 | Blue, GPIO7 |
+| HEAT / COOL LEDs | Red GPIO22, blue GPIO21 | The RGB LED: red for HEAT, blue for COOL, purple for both dim |
+| BOOT button | GPIO9 | GPIO9, the button on the NanoC6 |
+| Device name | `esp105` | `esp105-nanoc6`, so it never clashes with a real board |
+
+**Never plug the NanoC6's Grove port into a heat pump.** Its pins are 3.3 V with no level
+shifting, and the CN105 port carries 5 V signals and 12 V. Leave the Grove port empty: the
+simulator uses its two signal pins internally.
+
+The simulator answers the handshake and every request the CN105 component makes, and it applies
+the changes it is sent. It also runs a crude room model. While the unit heats or cools, the room
+moves 0.5 °C towards the setpoint every 20 seconds, and the unit reports itself as operating. Once
+the room reaches the setpoint the unit goes idle, and the room drifts back to 21 °C. It starts
+switched off, in COOL, at 22 °C.
+
+To flash it, set up `secrets.yaml` as for the real board, plug in the NanoC6 and run:
+
+```bash
+.venv/bin/esphome run nanoc6.yaml
+```
+
+Things to check:
+
+1. **Wi-Fi.** The blue LED blinks until Wi-Fi connects, then stays on. Put a wrong password in
+   `secrets.yaml` to see the fallback access point and its setup page.
+2. **Heat pump link.** The log shows `cn105_sim: Handshake (0x5A)`, then the CN105 component
+   reporting the unit's settings.
+3. **Home Assistant.** Adopt `esp105-nanoc6` and open the "Heat pump" climate entity. Turn it on
+   in HEAT at 24 °C. The log shows the simulator receive the change, then `Now heating`. The RGB
+   LED turns full red, and the room temperature climbs 0.5 °C every 20 seconds. At 24 °C the
+   unit goes idle and the LED dims.
+4. **Other controls.** Try COOL, DRY, AUTO and FAN_ONLY, the fan speeds, swing and the vertical
+   vane select. Each change shows up as a `cn105_sim: Set:` line.
+5. **Local web page, OTA and buttons.** Open `http://esp105-nanoc6.local`, update over the
+   network with `--device esp105-nanoc6.local`, and press the NanoC6's button to turn the LEDs
+   off and on.
+
+When you are done, erase the NanoC6 or flash it with something else; it shows up in Home
+Assistant as its own device.
 
 ## Using a room temperature sensor
 

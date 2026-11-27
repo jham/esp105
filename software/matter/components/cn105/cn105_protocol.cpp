@@ -228,7 +228,8 @@ bool decode_settings(const uint8_t *data, size_t len, Settings *out)
         return false;
     }
     s.mode = static_cast<Mode>(mode);
-    if (data[11] != 0) {
+    // data[11] is the half-degree setpoint; 0 or 0x80 means the unit does not use it.
+    if (data[11] != 0 && data[11] != 0x80) {
         s.half_degrees = true;
         s.setpoint_c = (data[11] - 128) / 2.0f;
     } else if (data[5] <= kMaxSetpointC - kMinSetpointC) {

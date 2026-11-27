@@ -180,6 +180,15 @@ static void test_parse_settings()
     CHECK(!s.half_degrees);
     CHECK(s.setpoint_c == 24.0f);
 
+    // 0x80 in the half-degree byte means "not used": fall back to the index byte
+    auto unused = make_packet(0x62, {0x02, 0x00, 0x00, 0x01, 0x03, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80,
+                                     0x00, 0x00, 0x00, 0x00});
+    packets = 0;
+    CHECK(parse_all(parser, unused, &packets));
+    CHECK(decode_settings(parser.data(), parser.data_length(), &s));
+    CHECK(!s.half_degrees);
+    CHECK(s.setpoint_c == 25.0f);
+
     // Unknown mode byte is rejected rather than guessed
     auto r = make_packet(0x62, {0x02, 0x00, 0x00, 0x01, 0x05, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                                 0x00, 0x00, 0x00, 0x00});
